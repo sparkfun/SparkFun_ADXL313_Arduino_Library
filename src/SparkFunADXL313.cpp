@@ -30,7 +30,6 @@
 #include <Wire.h>
 #include <SPI.h>
 
-#define ADXL313_DEVICE (0x53)    // Device Address for ADXL313
 #define ADXL313_TO_READ (6)      // Number of Bytes Read - Two Bytes Per Axis
 
 ADXL313::ADXL313() {
@@ -89,86 +88,42 @@ boolean ADXL313::checkPartId() {
 	return (false);
 }
 
-
-/***************** WRITES VALUE TO ADDRESS REGISTER *****************/
-void ADXL313::writeTo(byte address, byte val) {
-	if(I2C) {
-		writeToI2C(address, val);
-	}
-	else {
-		writeToSPI(address, val);
-	}
+boolean ADXL313::dataReady() {
+	return getRegisterBit(ADXL313_INT_SOURCE, ADXL313_INT_DATA_READY_BIT);	// check the dataReady bit 
 }
 
-/************************ READING NUM BYTES *************************/
-/*    Reads Num Bytes. Starts from Address Reg to _buff Array        */
-void ADXL313::readFrom(byte address, int num, byte _buff[]) {
-	if(I2C) {
-		readFromI2C(address, num, _buff);	// If I2C Communication
-	}
-	else {
-		readFromSPI(address, num, _buff);	// If SPI Communication
-	}
+boolean ADXL313::updateIntSourceStatuses() {
+	byte _b;
+	readFrom(ADXL313_INT_SOURCE, 1, &_b);
+	intSource.dataReady = ((_b >> ADXL313_INT_DATA_READY_BIT) & 1);
+	intSource.activity = ((_b >> ADXL313_INT_ACTIVITY_BIT) & 1);
+	intSource.inactivity = ((_b >> ADXL313_INT_INACTIVITY_BIT) & 1);
+	intSource.watermark = ((_b >> ADXL313_INT_WATERMARK_BIT) & 1);
+	intSource.overrun = ((_b >> ADXL313_INT_OVERRUN_BIT) & 1);
+
+	return (true);
 }
 
-/*************************** WRITE TO I2C ***************************/
-/*      Start; Send Register Address; Send Value To Write; End      */
-void ADXL313::writeToI2C(byte _address, byte _val) {
-	Wire.beginTransmission(ADXL313_DEVICE);
-	Wire.write(_address);
-	Wire.write(_val);
-	Wire.endTransmission();
+
+bool ADXL313::measureModeOn() {
+	//ADXL313 TURN ON
+	//writeTo(ADXL313_POWER_CTL, 0);	// Wakeup
+	//writeTo(ADXL313_POWER_CTL, 16);	// Auto_Sleep
+	writeTo(ADXL313_POWER_CTL, 8);	// Measure
+	return (true);
 }
 
-/*************************** READ FROM I2C **************************/
-/*                Start; Send Address To Read; End                  */
-void ADXL313::readFromI2C(byte address, int num, byte _buff[]) {
-	Wire.beginTransmission(ADXL313_DEVICE);
-	Wire.write(address);
-	Wire.endTransmission();
+/*********************** READING ACCELERATION ***********************/
+/*    Reads Acceleration into Three Class Variables:  x, y and z          */
 
-//	Wire.beginTransmission(ADXL313_DEVICE);
-// Wire.reqeustFrom contains the beginTransmission and endTransmission in it. 
-	Wire.requestFrom(ADXL313_DEVICE, num);  // Request 6 Bytes
 
-	int i = 0;
-	while(Wire.available())
-	{
-		_buff[i] = Wire.read();				// Receive Byte
-		i++;
-	}
-	if(i != num){
-		status = ADXL313_ERROR;
-		error_code = ADXL313_READ_ERROR;
-	}
-//	Wire.endTransmission();
-}
+void ADXL313::readAccel() {
+	readFrom(ADXL313_DATA_X0, ADXL313_TO_READ, _buff);	// Read Accel Data from ADXL345
 
-/************************** WRITE FROM SPI **************************/
-/*         Point to Destination; Write Value; Turn Off              */
-void ADXL313::writeToSPI(byte __reg_address, byte __val) {
-  digitalWrite(_CS, LOW);
-  SPI.transfer(__reg_address);
-  SPI.transfer(__val);
-  digitalWrite(_CS, HIGH);
-}
-
-/*************************** READ FROM SPI **************************/
-/*                                                                  */
-void ADXL313::readFromSPI(byte __reg_address, int num, byte _buff[]) {
-  // Read: Most Sig Bit of Reg Address Set
-  char _address = 0x80 | __reg_address;
-  // If Multi-Byte Read: Bit 6 Set
-  if(num > 1) {
-  	_address = _address | 0x40;
-  }
-
-  digitalWrite(_CS, LOW);
-  SPI.transfer(_address);		// Transfer Starting Reg Address To Be Read
-  for(int i=0; i<num; i++){
-    _buff[i] = SPI.transfer(0x00);
-  }
-  digitalWrite(_CS, HIGH);
+	// Each Axis @ All g Ranges: 10 Bit Resolution (2 Bytes)
+	x = (int16_t)((((int)_buff[1]) << 8) | _buff[0]);
+	y = (int16_t)((((int)_buff[3]) << 8) | _buff[2]);
+	z = (int16_t)((((int)_buff[5]) << 8) | _buff[4]);
 }
 
 /*************************** RANGE SETTING **************************/
@@ -625,4 +580,85 @@ void print_byte(byte val){
 	for(i=7; i>=0; i--){
 		Serial.print(val >> i & 1, BIN);
 	}
+}
+
+/***************** WRITES VALUE TO ADDRESS REGISTER *****************/
+void ADXL313::writeTo(byte address, byte val) {
+	if(I2C) {
+		writeToI2C(address, val);
+	}
+	else {
+		writeToSPI(address, val);
+	}
+}
+
+/************************ READING NUM BYTES *************************/
+/*    Reads Num Bytes. Starts from Address Reg to _buff Array        */
+void ADXL313::readFrom(byte address, int num, byte _buff[]) {
+	if(I2C) {
+		readFromI2C(address, num, _buff);	// If I2C Communication
+	}
+	else {
+		readFromSPI(address, num, _buff);	// If SPI Communication
+	}
+}
+
+/*************************** WRITE TO I2C ***************************/
+/*      Start; Send Register Address; Send Value To Write; End      */
+void ADXL313::writeToI2C(byte _address, byte _val) {
+	Wire.beginTransmission(_deviceAddress);
+	Wire.write(_address);
+	Wire.write(_val);
+	Wire.endTransmission();
+}
+
+/*************************** READ FROM I2C **************************/
+/*                Start; Send Address To Read; End                  */
+void ADXL313::readFromI2C(byte address, int num, byte _buff[]) {
+	Wire.beginTransmission(_deviceAddress);
+	Wire.write(address);
+	Wire.endTransmission();
+
+//	Wire.beginTransmission(ADXL313_DEVICE);
+// Wire.reqeustFrom contains the beginTransmission and endTransmission in it. 
+	Wire.requestFrom(_deviceAddress, num);  // Request 6 Bytes
+
+	int i = 0;
+	while(Wire.available())
+	{
+		_buff[i] = Wire.read();				// Receive Byte
+		i++;
+	}
+	if(i != num){
+		status = ADXL313_ERROR;
+		error_code = ADXL313_READ_ERROR;
+	}
+//	Wire.endTransmission();
+}
+
+/************************** WRITE FROM SPI **************************/
+/*         Point to Destination; Write Value; Turn Off              */
+void ADXL313::writeToSPI(byte __reg_address, byte __val) {
+  digitalWrite(_CS, LOW);
+  SPI.transfer(__reg_address);
+  SPI.transfer(__val);
+  digitalWrite(_CS, HIGH);
+}
+
+/*************************** READ FROM SPI **************************/
+/*                                                                  */
+void ADXL313::readFromSPI(byte __reg_address, int num, byte _buff[]) {
+  // Read: Most Sig Bit of Reg Address Set
+  char _address = 0x80 | __reg_address;
+  // If Multi-Byte Read: Bit 6 Set
+  if(num > 1) {
+  	_address = _address | 0x40;
+  }
+
+  digitalWrite(_CS, LOW);
+  SPI.transfer(_address);		// Transfer Starting Reg Address To Be Read
+  for(int i=0; i<num; i++){
+    _buff[i] = SPI.transfer(0x00);
+  }
+  digitalWrite(_CS, HIGH);
 }

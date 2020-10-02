@@ -49,24 +49,18 @@
 #define ADXL313_INT2_PIN		0x01		//INT2: 1
 
 
- /********************** INTERRUPT BIT POSITION **********************/ //NEED TO CHECK THESE FOR 313!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ /********************** INTERRUPT BIT POSITION **********************/
 #define ADXL313_INT_DATA_READY_BIT		0x07
-#define ADXL313_INT_SINGLE_TAP_BIT		0x06
-#define ADXL313_INT_DOUBLE_TAP_BIT		0x05
 #define ADXL313_INT_ACTIVITY_BIT		0x04
 #define ADXL313_INT_INACTIVITY_BIT		0x03
-#define ADXL313_INT_FREE_FALL_BIT		0x02
 #define ADXL313_INT_WATERMARK_BIT		0x01
-#define ADXL313_INT_OVERRUNY_BIT		0x00
+#define ADXL313_INT_OVERRUN_BIT			0x00
 
 #define ADXL313_DATA_READY				0x07
-#define ADXL313_SINGLE_TAP				0x06
-#define ADXL313_DOUBLE_TAP				0x05
 #define ADXL313_ACTIVITY				0x04
 #define ADXL313_INACTIVITY				0x03
-#define ADXL313_FREE_FALL				0x02
 #define ADXL313_WATERMARK				0x01
-#define ADXL313_OVERRUNY				0x00
+#define ADXL313_OVERRUN					0x00
 
 
  /****************************** ERRORS ******************************/
@@ -76,6 +70,23 @@
 #define ADXL313_NO_ERROR	0		// Initial State
 #define ADXL313_READ_ERROR	1		// Accelerometer Reading Error
 #define ADXL313_BAD_ARG		2		// Bad Argument
+
+
+//  ADXL313Interrupts
+//
+//  This is used by the ADXL313 class to hold interrupt settings and statuses from the most recent read of INT_SOURCE. 
+//  It is public within that class and the user is expected to write desired values into the settings before calling
+//  .setInterrupts();
+struct ADXL313IntSource
+{
+  public:
+    bool dataReady;
+    bool activity;
+	bool inactivity;
+	bool watermark;
+	bool overrun;
+};
+
 
 class ADXL313
 {
@@ -91,6 +102,12 @@ public:
 
 	byte error_code;				// Initial State
 	double gains[3];				// Counts to Gs
+
+	// INT_SOURCE register bit statuses
+	// used to allow a single read of the INT_SOURCE register,
+	// and then later check the status of each bit (stored individually in class varaibles)
+	ADXL313IntSource intSource;
+
 
 	// ADXL313 class constructor
 	// The constructor will set up with default settings via I2C
@@ -115,17 +132,28 @@ public:
 	bool isConnected();
 	bool checkPartId();
 
-	// available() -- Polls the sensor's DATA_READY bit to check
-	// if new data is available.
+	// dataReady() -- REads the entire INT_Source register, and checks the DATA_READY bit
+	// to see if new data is available.
+	// **Note, this will also clear any other INT source bits.
+	// If you need to know the other int source bits, then use updateIntSourceStatuses()
 	// Output:	1 - New data available
 	//			0 - No new data available
-	bool available();
+	bool dataReady();
+
+	// updateIntSourceStatuses() -- Reads the entire INT_Source register, 
+	// and stores all of the int statuses in class variables.
+	// note, this will clear all INT source bits.
+	// Output:	1 - function completed
+	//			0 - Communication failure
+	bool updateIntSourceStatuses();
+
+	bool measureModeOn();
 	
-	// readAdxl() -- Read the sensors output registers.
+	// readAccel() -- Read the sensors output registers.
 	// This function will read all six accelerometer output registers.
 	// The readings are stored in the class' x, y, and z variables. Read
-	// those _after_ calling readAdxl().
-	void readAdxl();
+	// those _after_ calling readAccel().
+	void readAccel();
 	
 	void setAxisGains(double *_gains);
 	void getAxisGains(double *_gains);

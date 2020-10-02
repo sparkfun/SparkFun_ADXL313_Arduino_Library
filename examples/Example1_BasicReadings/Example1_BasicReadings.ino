@@ -40,7 +40,7 @@
 
 #include <Wire.h>
 #include <SparkFunADXL313.h>
-ADXL313 accel;
+ADXL313 myAdxl;
 
 void setup()
 {
@@ -49,28 +49,27 @@ void setup()
 
   Wire.begin();
 
-  if (accel.beginI2C() == false) //Begin communication over I2C
+  if (myAdxl.begin() == false) //Begin communication over I2C
   {
     Serial.println("The sensor did not respond. Please check wiring.");
     while(1); //Freeze
   }
+  Serial.print("Sensor is connected properly.");
+  
+  myAdxl.measureModeOn(); // wakes up the sensor from standby and puts it into measurement mode
 }
 
 void loop()
 {
-  if(accel.available())
+  if(myAdxl.dataReady()) // check data ready interrupt, note, this clears all other int bits in INT_SOURCE reg
   {
-    accel.read();
-
+    myAdxl.readAccel(); // read all 3 axis, they are stored in class variables: myAdxl.x, myAdxl.y and myAdxl.z
     Serial.print("x: ");
-    Serial.print(accel.x);
-
-    Serial.print("y: ");
-    Serial.print(accel.y);
-
-    Serial.print("z: ");
-    Serial.print(accel.z);
-
+    Serial.print(myAdxl.x);
+    Serial.print("\ty: ");
+    Serial.print(myAdxl.y);
+    Serial.print("\tz: ");
+    Serial.print(myAdxl.z);
     Serial.println();
   }
   delay(50);

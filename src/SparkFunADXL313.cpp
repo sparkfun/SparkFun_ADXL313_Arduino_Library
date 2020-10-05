@@ -178,6 +178,22 @@ void ADXL313::setRange(byte range) {
 	writeTo(ADXL313_DATA_FORMAT, _s);
 }
 
+/*************************** AUTOSLEEP BIT **************************/
+/*                            ~ ON & OFF                           	*/
+bool ADXL313::autosleepOn() {
+	// sets the autosleep bit
+	// note, prior to calling this, 
+	// you will need to set THRESH_INACT and TIME_INACT.
+	setRegisterBit(ADXL313_POWER_CTL, ADXL313_AUTOSLEEP_BIT, true);
+	return (true);
+}
+
+bool ADXL313::autosleepOff() {
+	// clears the autosleep bit
+	setRegisterBit(ADXL313_POWER_CTL, ADXL313_AUTOSLEEP_BIT, false);
+	return (true);
+}
+
 /*************************** SELF_TEST BIT **************************/
 /*                            ~ GET & SET                           */
 bool ADXL313::getSelfTestBit() {

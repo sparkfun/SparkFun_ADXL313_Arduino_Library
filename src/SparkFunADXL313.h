@@ -170,6 +170,9 @@ public:
 	// The readings are stored in the class' x, y, and z variables. Read
 	// those _after_ calling readAccel().
 	void readAccel();
+
+	void autoSleepOn();
+	void autoSleepOff();
 	
 	void setAxisGains(double *_gains);
 	void getAxisGains(double *_gains);

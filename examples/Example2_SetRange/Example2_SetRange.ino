@@ -51,6 +51,13 @@ void setup()
 
   Wire.begin();
 
+  if (myAdxl.begin() == false) //Begin communication over I2C
+  {
+    Serial.println("The sensor did not respond. Please check wiring.");
+    while(1); //Freeze
+  }
+  Serial.print("Sensor is connected properly.");
+  
   myAdxl.standby(); // Must be in standby before changing settings.
                     // This is here just in case we already had sensor powered and/or
                     // configured from a previous setup.
@@ -62,13 +69,6 @@ void setup()
   // myAdxl.setRange(ADXL313_RANGE_1_G);
   // myAdxl.setRange(ADXL313_RANGE_2_G);
   // myAdxl.setRange(ADXL313_RANGE_4_G);
-
-  if (myAdxl.begin() == false) //Begin communication over I2C
-  {
-    Serial.println("The sensor did not respond. Please check wiring.");
-    while(1); //Freeze
-  }
-  Serial.print("Sensor is connected properly.");
   
   myAdxl.measureModeOn(); // wakes up the sensor from standby and puts it into measurement mode
 }

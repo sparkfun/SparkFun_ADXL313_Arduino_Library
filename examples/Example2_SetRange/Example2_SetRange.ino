@@ -1,7 +1,9 @@
 /******************************************************************************
-  Example1_BasicReadings.ino
-  Read values of x/y/z axis of the ADXL313 (via I2C), print them to terminal.
-  This uses default configuration (1G range, full resolution, 100Hz datarate).
+  Example2_SetRange.ino
+  Set range of the sensor to 4G.
+  Then read values of x/y/z axis of the ADXL313 (via I2C), print them to terminal.
+  Note, other range options are: 0.5G, 1G[defaut], 2G or 4 G.
+  Except for custom range, this example uses default configuration (full resolution, 100Hz datarate).
 
   SparkFun ADXL313 Arduino Library
   Pete Lewis @ SparkFun Electronics
@@ -45,9 +47,21 @@ ADXL313 myAdxl;
 void setup()
 {
   Serial.begin(115200);
-  Serial.println("Example 1 - Reading values from ADXL313");
+  Serial.println("Example 2 - Set 2G Range and read values from ADXL313");
 
   Wire.begin();
+
+  myAdxl.standby(); // Must be in standby before changing settings.
+                    // This is here just in case we already had sensor powered and/or
+                    // configured from a previous setup.
+
+  myAdxl.setRange(ADXL313_RANGE_2_G);
+
+  // Try some other range settings by uncommented your choice below
+  // myAdxl.setRange(ADXL313_RANGE_05_G);
+  // myAdxl.setRange(ADXL313_RANGE_1_G);
+  // myAdxl.setRange(ADXL313_RANGE_2_G);
+  // myAdxl.setRange(ADXL313_RANGE_4_G);
 
   if (myAdxl.begin() == false) //Begin communication over I2C
   {

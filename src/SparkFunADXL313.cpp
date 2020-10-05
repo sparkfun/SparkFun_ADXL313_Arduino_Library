@@ -104,12 +104,21 @@ boolean ADXL313::updateIntSourceStatuses() {
 	return (true);
 }
 
+bool ADXL313::standby() {
+	// clears the measure bit, putting decive in standby mode, ready for configuration
+	setRegisterBit(ADXL313_POWER_CTL, ADXL313_MEASURE_BIT, false);
+	return (true);
+}
 
 bool ADXL313::measureModeOn() {
-	//ADXL313 TURN ON
-	//writeTo(ADXL313_POWER_CTL, 0);	// Wakeup
-	//writeTo(ADXL313_POWER_CTL, 16);	// Auto_Sleep
-	writeTo(ADXL313_POWER_CTL, 8);	// Measure
+	// sets the measure bit, putting decive in measure mode, ready for reading data
+	setRegisterBit(ADXL313_POWER_CTL, ADXL313_MEASURE_BIT, true);
+	return (true);
+}
+
+bool ADXL313::softReset() {
+	// soft reset clears all settings, and puts it in standby mode
+	writeTo(ADXL313_SOFT_RESET, 0x52);
 	return (true);
 }
 
@@ -127,28 +136,38 @@ void ADXL313::readAccel() {
 }
 
 /*************************** RANGE SETTING **************************/
-/*          ACCEPTABLE VALUES: 2g, 4g, 8g, 16g ~ GET & SET          */
-void ADXL313::getRangeSetting(byte* rangeSetting) {
+/*          	OPTIONS: 0.5g, 1g, 2g, 4g ~ GET & SET          		*/
+float ADXL313::getRange() {
 	byte _b;
 	readFrom(ADXL313_DATA_FORMAT, 1, &_b);
-	*rangeSetting = _b & 0b00000011;
+	byte range = (_b & 0b00000011);
+	switch (range) {
+		case ADXL313_RANGE_05_G:
+			return 0.5;
+		case ADXL313_RANGE_1_G:
+			return 1.0;
+		case ADXL313_RANGE_2_G:
+			return 2.0;
+		case ADXL313_RANGE_4_G:
+			return 4.0;
+	}
 }
 
-void ADXL313::setRangeSetting(int val) {
+void ADXL313::setRange(byte range) {
 	byte _s;
 	byte _b;
 
-	switch (val) {
-		case 2:
+	switch (range) {
+		case ADXL313_RANGE_05_G:
 			_s = 0b00000000;
 			break;
-		case 4:
+		case ADXL313_RANGE_1_G:
 			_s = 0b00000001;
 			break;
-		case 8:
+		case ADXL313_RANGE_2_G:
 			_s = 0b00000010;
 			break;
-		case 16:
+		case ADXL313_RANGE_4_G:
 			_s = 0b00000011;
 			break;
 		default:

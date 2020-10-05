@@ -62,6 +62,18 @@
 #define ADXL313_WATERMARK				0x01
 #define ADXL313_OVERRUN					0x00
 
+ /********************** RANGE SETTINGS OPTIONS **********************/
+#define ADXL313_RANGE_05_G		1 // 0-0.5G
+#define ADXL313_RANGE_1_G		2 // 0-1G
+#define ADXL313_RANGE_2_G		3 // 0-2G
+#define ADXL313_RANGE_4_G		4 // 0-4G
+
+ /********************** POWER_CTL BIT POSITION **********************/
+#define ADXL313_I2C_DISABLE_BIT		0x06
+#define ADXL313_LINK_BIT			0x05
+#define ADXL313_AUTO_SLEEP_BIT		0x04
+#define ADXL313_MEASURE_BIT			0x03
+#define ADXL313_SLEEP_BIT			0x02
 
  /****************************** ERRORS ******************************/
 #define ADXL313_OK			1		// No Error
@@ -148,6 +160,10 @@ public:
 	bool updateIntSourceStatuses();
 
 	bool measureModeOn();
+
+	bool softReset();
+
+	bool standby();
 	
 	// readAccel() -- Read the sensors output registers.
 	// This function will read all six accelerometer output registers.
@@ -210,8 +226,8 @@ public:
 	void InactivityINT(bool status);
 	void ActivityINT(bool status);
 	
-	void getRangeSetting(byte* rangeSetting);
-	void setRangeSetting(int val);
+	float getRange();
+	void setRange(byte range);
 	bool getSelfTestBit();
 	void setSelfTestBit(bool selfTestBit);
 	bool getSpiBit();

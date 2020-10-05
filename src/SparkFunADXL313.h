@@ -211,11 +211,12 @@ public:
 	bool isAsleep();
 	
 	bool isLowPower();
-	void setLowPower(bool state);
+	void lowPowerOn();
+	void lowPowerOff();
 	double getRate();
 	void setRate(double rate);
-	void set_bw(byte bw_code);
-	byte get_bw_code();  
+	void setBandwidth(byte bw);
+	byte getBandwidth();
 	
 	bool triggered(byte interrupts, int mask);
 	

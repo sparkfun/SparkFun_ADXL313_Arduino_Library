@@ -1,13 +1,10 @@
 /******************************************************************************
-  Example3_Autosleep.ino
-  Shows how to use Autosleep feature. 
-  First, setup THRESH_INACT, TIME_INACT, and participating axis.
-  These settings will determine when the unit will go into autosleep mode and save power!
-  We are only going to use the x-axis and y-axis (and are disabling z-axis).
-  This is so you can place the board "flat" inside your project, 
-  and we can ignore gravity on z-axis.
-  Note, besides autosleep, this example uses default configuration:
-  (1G range, full resolution, 100Hz datarate).
+  Example4_LowPowerMode.ino
+  Shows how to use Low Power feature. 
+  In addition to turning on low power mode, you will also want to consider
+  bandwidth rate. This will affect your results in low power land.
+  In this example, we will turn on low power mode and set BW to 12.5Hz.
+  Then we will only take samples at or above 12.5Hz (so we don't miss samples)
 
   SparkFun ADXL313 Arduino Library
   Pete Lewis @ SparkFun Electronics
@@ -51,7 +48,7 @@ ADXL313 myAdxl;
 void setup()
 {
   Serial.begin(115200);
-  Serial.println("Example 3 - Setup Autosleep and then only print values when it's awake.");
+  Serial.println("Example 4 - Low power mode ON with 12.5Hz bandwidth.");
 
   Wire.begin();
 
@@ -66,15 +63,17 @@ void setup()
                     // This is here just in case we already had sensor powered and/or
                     // configured from a previous setup.
 
-  myAdxl.setInactivityThreshold(25); // 0-255 (62.5mg/LSB)
+  myAdxl.lowPowerOn();
 
-  myAdxl.setTimeInactivity(5); // 0-255 (1sec/LSB)
-
-  myAdxl.setInactivityX(true); // enable x-axis participation in detecting inactivity
-  myAdxl.setInactivityY(true); // enable y-axis participation in detecting inactivity
-  myAdxl.setInactivityZ(false); // disable z-axis participation in detecting inactivity
-
-  myAdxl.autosleepOn();
+  myAdxl.setBandwidth(ADXL313_BW_12_5); // 12.5Hz is the best power savings.
+  // Other options possible are the following.
+  // Note, bandwidths not listed below do not cause power savings.
+  // ADXL313_BW_200		    (115uA in low power)
+  // ADXL313_BW_100		    (82uA in low power)
+  // ADXL313_BW_50		    (64uA in low power)
+  // ADXL313_BW_25		    (57uA in low power)
+  // ADXL313_BW_12_5	    (50uA in low power)
+  // ADXL313_BW_6_25		  (43uA in low power)
 
   myAdxl.measureModeOn(); // wakes up the sensor from standby and puts it into measurement mode
 }
@@ -94,9 +93,9 @@ void loop()
     Serial.print(myAdxl.z);
     Serial.println();
   }
-  else if (myAdxl.intSource.inactivity == true)
+  else
   {
-    Serial.println("Inactivity detected. Nothin' shakin.");
+    Serial.println("Waiting for data.");
   }  
-  delay(50);
+  delay(80); // 80ms should put us close to a sample data rate of 12.5 (probably a bit greater due to communication times)
 }

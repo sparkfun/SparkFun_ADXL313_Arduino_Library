@@ -428,8 +428,11 @@ void ADXL313::setInactivityAc(bool state) {
 bool ADXL313::isLowPower(){
 	return getRegisterBit(ADXL313_BW_RATE, 4);
 }
-void ADXL313::setLowPower(bool state) {
-	setRegisterBit(ADXL313_BW_RATE, 4, state);
+void ADXL313::lowPowerOn() {
+	setRegisterBit(ADXL313_BW_RATE, 4, true);
+}
+void ADXL313::lowPowerOff() {
+	setRegisterBit(ADXL313_BW_RATE, 4, false);
 }
 
 /*************************** RATE BITS ******************************/
@@ -458,20 +461,14 @@ void ADXL313::setRate(double rate){
 
 /*************************** BANDWIDTH ******************************/
 /*                          ~ SET & GET                             */
-void ADXL313::set_bw(byte bw_code){
-	// if((bw_code < ADXL313_BW_0_05) || (bw_code > ADXL313_BW_1600)){
-	// 	status = false;
-	// 	error_code = ADXL313_BAD_ARG;
-	// }
-	// else{
-	// 	writeTo(ADXL313_BW_RATE, bw_code);
-	// }
+void ADXL313::setBandwidth(byte bw){
+ 	writeTo(ADXL313_BW_RATE, bw);
 }
 
-byte ADXL313::get_bw_code(){
-	byte bw_code;
-	readFrom(ADXL313_BW_RATE, 1, &bw_code);
-	return bw_code;
+byte ADXL313::getBandwidth(){
+	byte _b;
+	readFrom(ADXL313_BW_RATE, 1, &_b);
+	return _b;
 }
 
 

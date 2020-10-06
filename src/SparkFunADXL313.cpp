@@ -141,16 +141,22 @@ float ADXL313::getRange() {
 	byte _b;
 	readFrom(ADXL313_DATA_FORMAT, 1, &_b);
 	byte range = (_b & 0b00000011);
+	float range_val;
 	switch (range) {
 		case ADXL313_RANGE_05_G:
-			return 0.5;
+			range_val = 0.5;
+			break;
 		case ADXL313_RANGE_1_G:
-			return 1.0;
+			range_val = 1.0;
+			break;
 		case ADXL313_RANGE_2_G:
-			return 2.0;
+			range_val = 2.0;
+			break;
 		case ADXL313_RANGE_4_G:
-			return 4.0;
+			range_val = 4.0;
+			break;
 	}
+	return range_val;
 }
 
 void ADXL313::setRange(byte range) {

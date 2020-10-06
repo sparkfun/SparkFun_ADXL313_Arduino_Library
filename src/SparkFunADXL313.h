@@ -71,7 +71,7 @@
  /********************** POWER_CTL BIT POSITION **********************/
 #define ADXL313_I2C_DISABLE_BIT		0x06
 #define ADXL313_LINK_BIT			0x05
-#define ADXL313_AUTO_SLEEP_BIT		0x04
+#define ADXL313_AUTOSLEEP_BIT		0x04
 #define ADXL313_MEASURE_BIT			0x03
 #define ADXL313_SLEEP_BIT			0x02
 
@@ -171,8 +171,8 @@ public:
 	// those _after_ calling readAccel().
 	void readAccel();
 
-	void autoSleepOn();
-	void autoSleepOff();
+	bool autosleepOn();
+	bool autosleepOff();
 	
 	void setAxisGains(double *_gains);
 	void getAxisGains(double *_gains);

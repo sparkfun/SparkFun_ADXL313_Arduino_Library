@@ -3,11 +3,9 @@
   Shows how to use Autosleep feature. 
   First, setup THRESH_INACT, TIME_INACT, and participating axis.
   These settings will determine when the unit will go into autosleep mode and save power!
-  We are only going to use the x-axis and y-axis (and are disabling z-axis).
+  We are only going to use the x-axis (and are disabling y-axis and z-axis).
   This is so you can place the board "flat" inside your project, 
   and we can ignore gravity on z-axis.
-  Note, besides autosleep, this example uses default configuration:
-  (1G range, full resolution, 100Hz datarate).
 
   SparkFun ADXL313 Arduino Library
   Pete Lewis @ SparkFun Electronics
@@ -53,37 +51,51 @@ void setup()
   Serial.begin(115200);
   Serial.println("Example 3 - Setup Autosleep and then only print values when it's awake.");
 
-  Wire.begin();
+Wire.begin();
 
   if (myAdxl.begin() == false) //Begin communication over I2C
   {
     Serial.println("The sensor did not respond. Please check wiring.");
-    while(1); //Freeze
+    while (1); //Freeze
   }
   Serial.print("Sensor is connected properly.");
-  
+
   myAdxl.standby(); // Must be in standby before changing settings.
-                    // This is here just in case we already had sensor powered and/or
-                    // configured from a previous setup.
+  // This is here just in case we already had sensor powered and/or
+  // configured from a previous setup.
 
-  myAdxl.setInactivityThreshold(25); // 0-255 (62.5mg/LSB)
+  
+  myAdxl.setRange(ADXL313_RANGE_4_G);
 
+  // setup activity sensing options
+  myAdxl.setActivityX(true); // enable x-axis participation in detecting inactivity
+  myAdxl.setActivityY(false); // disable y-axis participation in detecting inactivity
+  myAdxl.setActivityZ(false); // disable z-axis participation in detecting inactivity
+  myAdxl.setActivityThreshold(10); // 0-255 (62.5mg/LSB)
+  
+  //setup inactivity sensing options
+  myAdxl.setInactivityX(true); // enable x-axis participation in detecting inactivity
+  myAdxl.setInactivityY(false); // disable y-axis participation in detecting inactivity
+  myAdxl.setInactivityZ(false); // disable z-axis participation in detecting inactivity
+  myAdxl.setInactivityThreshold(10); // 0-255 (62.5mg/LSB)
   myAdxl.setTimeInactivity(5); // 0-255 (1sec/LSB)
 
-  myAdxl.setInactivityX(true); // enable x-axis participation in detecting inactivity
-  myAdxl.setInactivityY(true); // enable y-axis participation in detecting inactivity
-  myAdxl.setInactivityZ(false); // disable z-axis participation in detecting inactivity
-
   myAdxl.autosleepOn();
-
+  
   myAdxl.measureModeOn(); // wakes up the sensor from standby and puts it into measurement mode
+
 }
 
 void loop()
 {
-  updateIntSourceStatuses(); // this will update all class intSource.xxxxx variables by reading int source bits.
+  myAdxl.updateIntSourceStatuses(); // this will update all class intSource.xxxxx variables by reading int source bits.
 
-  if(myAdxl.intSource.dataReady) // check data ready interrupt bit
+  if (myAdxl.intSource.inactivity == true)
+  {
+    Serial.println("Inactivity detected.");
+    delay(1000);
+  }
+  if (myAdxl.intSource.dataReady) // check data ready interrupt bit
   {
     myAdxl.readAccel(); // read all 3 axis, they are stored in class variables: myAdxl.x, myAdxl.y and myAdxl.z
     Serial.print("x: ");
@@ -94,9 +106,9 @@ void loop()
     Serial.print(myAdxl.z);
     Serial.println();
   }
-  else if (myAdxl.intSource.inactivity == true)
+  else
   {
-    Serial.println("Inactivity detected. Nothin' shakin.");
-  }  
+    Serial.println("Device is asleep (dataReady is reading false)");
+  }
   delay(50);
 }

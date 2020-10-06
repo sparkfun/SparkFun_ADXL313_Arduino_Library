@@ -92,7 +92,7 @@ boolean ADXL313::dataReady() {
 	return getRegisterBit(ADXL313_INT_SOURCE, ADXL313_INT_DATA_READY_BIT);	// check the dataReady bit 
 }
 
-boolean ADXL313::updateIntSourceStatuses() {
+bool ADXL313::updateIntSourceStatuses() {
 	byte _b;
 	readFrom(ADXL313_INT_SOURCE, 1, &_b);
 	intSource.dataReady = ((_b >> ADXL313_INT_DATA_READY_BIT) & 1);
@@ -190,6 +190,10 @@ bool ADXL313::autosleepOn() {
 	// sets the autosleep bit
 	// note, prior to calling this, 
 	// you will need to set THRESH_INACT and TIME_INACT.
+	// set the link bit, to "link" activity and inactivity sensing
+	setRegisterBit(ADXL313_POWER_CTL, ADXL313_LINK_BIT, true);
+	
+	// set the autosleep
 	setRegisterBit(ADXL313_POWER_CTL, ADXL313_AUTOSLEEP_BIT, true);
 	return (true);
 }

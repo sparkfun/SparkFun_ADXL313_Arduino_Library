@@ -1,11 +1,22 @@
 /******************************************************************************
-  Example3_Autosleep.ino
-  Shows how to use Autosleep feature.
+  Example6_Interrupt.ino
+  Shows how to setup a hardware interrupt on the ADXL313.
+  We will utilize the autosleep feature of the sensor.
+  When it senses inactivity, it will go to sleep.
+  When it senses new activity, it will wake up and trigger the INT1 pin.
+  We will be listening with our Arduino, which will have a hardware interrupt setup.
+
+  ///// Autosleep setup //////
   First, setup THRESH_INACT, TIME_INACT, and participating axis.
   These settings will determine when the unit will go into autosleep mode and save power!
   We are only going to use the x-axis (and are disabling y-axis and z-axis).
   This is so you can place the board "flat" inside your project,
   and we can ignore gravity on z-axis.
+
+  ///// Interrupt setup //////
+  Enable activity interrupt.
+  Map activity interrupt to "int pin 1".
+  Setup intterupt on Arduino (pin D2, aka INT0)
 
   SparkFun ADXL313 Arduino Library
   Pete Lewis @ SparkFun Electronics
@@ -30,8 +41,9 @@
   ARDUINO --> ADXL313
   SDA (A4) --> SDA
   SCL (A5) --> SCL
-  GND --> 3.3V
+  3.3V --> 3.3V
   GND --> GND
+  D2 --> INT1
 
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -46,10 +58,16 @@
 #include <SparkFunADXL313.h>
 ADXL313 myAdxl;
 
+bool awake = true; // global variable to keep track.
+bool interruptFlag = false; // global variabl to keep track of new interrupts. Only ever set true by ISR
+
 void setup()
 {
+  pinMode(2, INPUT); // setup for interrupt
+  delay(500);
+
   Serial.begin(115200);
-  Serial.println("Example 3 - Setup Autosleep and then only print values when it's awake.");
+  Serial.println("Example 6 - Setup Autosleep and then only print values when it's awake.");
 
   Wire.begin();
 
@@ -63,6 +81,7 @@ void setup()
   myAdxl.standby(); // Must be in standby before changing settings.
   // This is here just in case we already had sensor powered and/or
   // configured from a previous setup.
+
 
   myAdxl.setRange(ADXL313_RANGE_4_G);
 
@@ -79,24 +98,59 @@ void setup()
   myAdxl.setInactivityThreshold(10); // 0-255 (62.5mg/LSB)
   myAdxl.setTimeInactivity(5); // 0-255 (1sec/LSB)
 
-  myAdxl.ActivityINT(1);
-  myAdxl.InactivityINT(1);
+
+
+  myAdxl.setInterruptMapping(ADXL313_INT_ACTIVITY_BIT, ADXL313_INT1_PIN); // when activity is detected, it will effect the int1 pin on the sensor
+  myAdxl.setInterruptMapping(ADXL313_INT_INACTIVITY_BIT, ADXL313_INT1_PIN);
+  // myAdxl.setInterruptMapping(ADXL313_INT_DATA_READY_BIT, ADXL313_INT1_PIN);
+
+  // enable/disable interrupts
+  // note, we set them all here, just in case there were previous settings,
+  // that need to be changed for this example to work properly.
+  myAdxl.InactivityINT(true); // ensable the inactivity interrupt
+  myAdxl.ActivityINT(true); // enable the activity interrupt
+  myAdxl.DataReadyINT(false); // disable dataReady
 
   myAdxl.autosleepOn();
 
   myAdxl.measureModeOn(); // wakes up the sensor from standby and puts it into measurement mode
+
+  // print int enable statuses, to verify we're setup correctly
+  Serial.println();
+  Serial.print("activity int enable: ");
+  Serial.println(myAdxl.isInterruptEnabled(ADXL313_INT_ACTIVITY_BIT));
+  Serial.print("inactivity int enable: ");
+  Serial.println(myAdxl.isInterruptEnabled(ADXL313_INT_INACTIVITY_BIT));
+  Serial.print("dataReady int enable: ");
+  Serial.println(myAdxl.isInterruptEnabled(ADXL313_INT_DATA_READY_BIT));
+  delay(5000);
+
+  attachInterrupt(digitalPinToInterrupt(2), int1_ISR, RISING); // note, the INT output on the ADXL313 is default active HIGH.
 }
 
 void loop()
 {
-  myAdxl.updateIntSourceStatuses(); // this will update all class intSource.xxxxx variables by reading int source bits.
-
-  if (myAdxl.intSource.inactivity == true)
+  if (interruptFlag == true) // sensor is awake (this variable is only ever set true in ACT_INACT_ISR)
   {
-    Serial.println("Inactivity detected.");
-    delay(1000);
+    // interrupt has fired
+    // check to see what type of detection it was
+
+    myAdxl.updateIntSourceStatuses(); // this will update all class intSource.xxxxx variables by reading int source bits.
+    interruptFlag = false;
+
+    if (myAdxl.intSource.activity == true)
+    {
+      Serial.println("Activity detected.");
+      awake = true;
+    }
+    if (myAdxl.intSource.inactivity == true)
+    {
+      Serial.println("Inactivity detected.");
+      awake = false;
+    }
   }
-  if (myAdxl.intSource.dataReady) // check data ready interrupt bit
+
+  if (awake && myAdxl.intSource.dataReady)
   {
     myAdxl.readAccel(); // read all 3 axis, they are stored in class variables: myAdxl.x, myAdxl.y and myAdxl.z
     Serial.print("x: ");
@@ -107,9 +161,11 @@ void loop()
     Serial.print(myAdxl.z);
     Serial.println();
   }
-  else
-  {
-    Serial.println("Device is asleep (dataReady is reading false)");
-  }
   delay(50);
+}
+
+// activity or inactivity has caused an interrupt
+void int1_ISR()
+{
+  interruptFlag = true;
 }

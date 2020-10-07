@@ -229,6 +229,7 @@ public:
 	void setImportantInterruptMapping(int single_tap, int double_tap, int free_fall, int activity, int inactivity);
 	void InactivityINT(bool status);
 	void ActivityINT(bool status);
+	void DataReadyINT(bool status);
 	
 	float getRange();
 	void setRange(byte range);

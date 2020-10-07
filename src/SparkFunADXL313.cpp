@@ -577,6 +577,15 @@ void ADXL313::InactivityINT(bool status) {
 	}
 }
 
+void ADXL313::DataReadyINT(bool status) {
+	if(status) {
+		setInterrupt( ADXL313_INT_DATA_READY_BIT, 1);
+	}
+	else {
+		setInterrupt( ADXL313_INT_DATA_READY_BIT, 0);
+	}
+}
+
 void ADXL313::setRegisterBit(byte regAdress, int bitPos, bool state) {
 	byte _b;
 	readFrom(regAdress, 1, &_b);

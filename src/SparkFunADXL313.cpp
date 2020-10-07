@@ -521,9 +521,9 @@ bool ADXL313::getInterruptMapping(byte interruptBit) {
 // /*********************** INTERRUPT MAPPING **************************/
 // /*         Set the Mapping of an Interrupt to pin1 or pin2          */
 // // eg: setInterruptMapping(ADXL313_INT_DOUBLE_TAP_BIT,ADXL313_INT2_PIN);
-// void ADXL313::setInterruptMapping(byte interruptBit, bool interruptPin) {
-// 	setRegisterBit(ADXL313_INT_MAP, interruptBit, interruptPin);
-// }
+ void ADXL313::setInterruptMapping(byte interruptBit, bool interruptPin) {
+ 	setRegisterBit(ADXL313_INT_MAP, interruptBit, interruptPin);
+ }
 
 // void ADXL313::setImportantInterruptMapping(int single_tap, int double_tap, int free_fall, int activity, int inactivity) {
 // 	if(single_tap == 1) {

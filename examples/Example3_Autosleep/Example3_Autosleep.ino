@@ -1,10 +1,10 @@
 /******************************************************************************
   Example3_Autosleep.ino
-  Shows how to use Autosleep feature. 
+  Shows how to use Autosleep feature.
   First, setup THRESH_INACT, TIME_INACT, and participating axis.
   These settings will determine when the unit will go into autosleep mode and save power!
   We are only going to use the x-axis (and are disabling y-axis and z-axis).
-  This is so you can place the board "flat" inside your project, 
+  This is so you can place the board "flat" inside your project,
   and we can ignore gravity on z-axis.
 
   SparkFun ADXL313 Arduino Library
@@ -15,7 +15,7 @@
   Do you like this library? Help support SparkFun. Buy a board!
 
     SparkFun 3-Axis Digital Accelerometer Breakout - ADXL313 (Qwiic)
-    https://www.sparkfun.com/products/17241  
+    https://www.sparkfun.com/products/17241
 
   Development environment specifics:
 
@@ -51,7 +51,7 @@ void setup()
   Serial.begin(115200);
   Serial.println("Example 3 - Setup Autosleep and then only print values when it's awake.");
 
-Wire.begin();
+  Wire.begin();
 
   if (myAdxl.begin() == false) //Begin communication over I2C
   {
@@ -64,7 +64,6 @@ Wire.begin();
   // This is here just in case we already had sensor powered and/or
   // configured from a previous setup.
 
-  
   myAdxl.setRange(ADXL313_RANGE_4_G);
 
   // setup activity sensing options
@@ -72,7 +71,7 @@ Wire.begin();
   myAdxl.setActivityY(false); // disable y-axis participation in detecting inactivity
   myAdxl.setActivityZ(false); // disable z-axis participation in detecting inactivity
   myAdxl.setActivityThreshold(10); // 0-255 (62.5mg/LSB)
-  
+
   //setup inactivity sensing options
   myAdxl.setInactivityX(true); // enable x-axis participation in detecting inactivity
   myAdxl.setInactivityY(false); // disable y-axis participation in detecting inactivity
@@ -80,10 +79,11 @@ Wire.begin();
   myAdxl.setInactivityThreshold(10); // 0-255 (62.5mg/LSB)
   myAdxl.setTimeInactivity(5); // 0-255 (1sec/LSB)
 
-  myAdxl.autosleepOn();
-  
-  myAdxl.measureModeOn(); // wakes up the sensor from standby and puts it into measurement mode
+  myAdxl.InactivityINT(1);
 
+  myAdxl.autosleepOn();
+
+  myAdxl.measureModeOn(); // wakes up the sensor from standby and puts it into measurement mode
 }
 
 void loop()

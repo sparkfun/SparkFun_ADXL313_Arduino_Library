@@ -1,6 +1,6 @@
 /******************************************************************************
   Example8_SPI.ino
-  Read values of x/y/z axis of the ADXL313 (via SPI), print them to terminal.
+  Read values of x/y/z axis of the ADXL313 (via I2C), print them to terminal.
   This uses default configuration (1G range, full resolution, 100Hz datarate).
 
   SparkFun ADXL313 Arduino Library
@@ -40,36 +40,39 @@
 
 #include <SPI.h>
 #include <SparkFunADXL313.h>
-ADXL313 accel;
+ADXL313 myAdxl;
 
 void setup()
 {
   Serial.begin(115200);
-  Serial.println("Reading values from ADXL313");
+  Serial.println("Example 8 - Reading values from ADXL313 over SPI");
 
-  if (accel.beginSPI() == false) //Begin communication over SPI
+  if (myAdxl.beginSPI(10) == false) //Begin communication over SPI with CS pin of 10. note, beginSPI() returns the result of checkPartID().
   {
     Serial.println("The sensor did not respond. Please check wiring.");
     while(1); //Freeze
   }
+  Serial.print("Sensor is connected properly.");
+  
+  myAdxl.measureModeOn(); // wakes up the sensor from standby and puts it into measurement mode
 }
 
 void loop()
 {
-  if(accel.available())
+  if(myAdxl.dataReady()) // check data ready interrupt, note, this clears all other int bits in INT_SOURCE reg
   {
-    accel.read();
-
+    myAdxl.readAccel(); // read all 3 axis, they are stored in class variables: myAdxl.x, myAdxl.y and myAdxl.z
     Serial.print("x: ");
-    Serial.print(accel.x);
-
-    Serial.print("y: ");
-    Serial.print(accel.y);
-
-    Serial.print("z: ");
-    Serial.print(accel.z);
-
+    Serial.print(myAdxl.x);
+    Serial.print("\ty: ");
+    Serial.print(myAdxl.y);
+    Serial.print("\tz: ");
+    Serial.print(myAdxl.z);
     Serial.println();
   }
+  else
+  {
+    Serial.println("Waiting for dataReady.");
+  }  
   delay(50);
 }

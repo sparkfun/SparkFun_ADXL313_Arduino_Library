@@ -75,6 +75,24 @@
 #define ADXL313_MEASURE_BIT			0x03
 #define ADXL313_SLEEP_BIT			0x02
 
+ /********************** BANDWIDTH RATE CODES (HZ) *******************/
+#define ADXL313_BW_1600			0xF			// 1111		IDD = 170uA
+#define ADXL313_BW_800			0xE			// 1110		IDD = 115uA
+#define ADXL313_BW_400			0xD			// 1101		IDD = 170uA
+#define ADXL313_BW_200			0xC			// 1100		IDD = 170uA (115 low power)
+#define ADXL313_BW_100			0xB			// 1011		IDD = 170uA (82 low power)
+#define ADXL313_BW_50			0xA			// 1010		IDD = 170uA (64 in low power)
+#define ADXL313_BW_25			0x9			// 1001		IDD = 115uA (57 in low power)
+#define ADXL313_BW_12_5		    0x8			// 1000		IDD = 82uA (50 in low power)
+#define ADXL313_BW_6_25			0x7			// 0111		IDD = 65uA (43 in low power)
+#define ADXL313_BW_3_125		0x6			// 0110		IDD = 57uA
+
+ /********************** FIFO MODE OPTIONS ***************************/
+#define ADXL313_FIFO_MODE_BYPASS	0x00
+#define ADXL313_FIFO_MODE_FIFO		0x01
+#define ADXL313_FIFO_MODE_STREAM	0x02
+#define ADXL313_FIFO_MODE_TRIGGER	0x03
+
  /****************************** ERRORS ******************************/
 #define ADXL313_OK			1		// No Error
 #define ADXL313_ERROR		0		// Error Exists
@@ -173,6 +191,13 @@ public:
 
 	bool autosleepOn();
 	bool autosleepOff();
+
+	byte getFifoMode();
+	void setFifoMode(byte mode);
+	void setFifoSamplesThreshhold(byte samples);
+	byte getFifoSamplesThreshhold();
+	byte getFifoEntriesAmount();
+	void clearFifo();
 	
 	void setAxisGains(double *_gains);
 	void getAxisGains(double *_gains);
@@ -230,6 +255,8 @@ public:
 	void InactivityINT(bool status);
 	void ActivityINT(bool status);
 	void DataReadyINT(bool status);
+	void WatermarkINT(bool status);
+	void OverrunINT(bool status);
 	
 	float getRange();
 	void setRange(byte range);

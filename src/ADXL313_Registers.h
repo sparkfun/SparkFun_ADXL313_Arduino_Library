@@ -62,21 +62,6 @@
 #define ADXL313_FIFO_STATUS			0x39
 
 ////////////////////////////////
-// ADXL313 Bandwidth (Hz) Rate Codes //
-////////////////////////////////
-#define ADXL313_BW_1600			0xF			// 1111		IDD = 170uA
-#define ADXL313_BW_800			0xE			// 1110		IDD = 115uA
-#define ADXL313_BW_400			0xD			// 1101		IDD = 170uA
-#define ADXL313_BW_200			0xC			// 1100		IDD = 170uA (115 low power)
-#define ADXL313_BW_100			0xB			// 1011		IDD = 170uA (82 low power)
-#define ADXL313_BW_50			0xA			// 1010		IDD = 170uA (64 in low power)
-#define ADXL313_BW_25			0x9			// 1001		IDD = 115uA (57 in low power)
-#define ADXL313_BW_12_5		    0x8			// 1000		IDD = 82uA (50 in low power)
-#define ADXL313_BW_6_25			0x7			// 0111		IDD = 65uA (43 in low power)
-#define ADXL313_BW_3_125			0x6			// 0110		IDD = 57uA
-
-
-////////////////////////////////
 // ADXL313 Responses //
 ////////////////////////////////
 #define ADXL313_DEVID_0_RSP_EXPECTED			0xAD

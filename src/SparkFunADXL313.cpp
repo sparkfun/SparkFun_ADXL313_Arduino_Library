@@ -586,6 +586,72 @@ void ADXL313::DataReadyINT(bool status) {
 	}
 }
 
+void ADXL313::WatermarkINT(bool status) {
+	if(status) {
+		setInterrupt( ADXL313_INT_WATERMARK_BIT, 1);
+	}
+	else {
+		setInterrupt( ADXL313_INT_WATERMARK_BIT, 0);
+	}
+}
+
+void ADXL313::OverrunINT(bool status) {
+	if(status) {
+		setInterrupt( ADXL313_INT_OVERRUN_BIT, 1);
+	}
+	else {
+		setInterrupt( ADXL313_INT_OVERRUN_BIT, 0);
+	}
+}
+
+
+/*************************** FIFO MODE SETTING **************************/
+/*          	                GET & SET                         		*/
+byte ADXL313::getFifoMode() {
+	byte _b;
+	readFrom(ADXL313_FIFO_CTL, 1, &_b);
+	byte mode = (_b & 0b11000000);
+	mode = (mode >> 6);
+	return mode;
+}
+
+void ADXL313::setFifoMode(byte mode) {
+	byte _s = (mode << 6);
+	byte _b;
+	readFrom(ADXL313_FIFO_CTL, 1, &_b);
+	_s |= (_b & 0b00111111);
+	writeTo(ADXL313_FIFO_CTL, _s);
+}
+
+byte ADXL313::getFifoSamplesThreshhold() {
+	byte _b;
+	readFrom(ADXL313_FIFO_CTL, 1, &_b);
+	byte samples = (_b & 0b00011111);
+	return samples;
+}
+
+void ADXL313::setFifoSamplesThreshhold(byte samples) {
+	byte _s = samples;
+	byte _b;
+	readFrom(ADXL313_FIFO_CTL, 1, &_b);
+	_s |= (_b & 0b11100000);
+	writeTo(ADXL313_FIFO_CTL, _s);
+}
+
+byte ADXL313::getFifoEntriesAmount() {
+	byte _b;
+	readFrom(ADXL313_FIFO_STATUS, 1, &_b);
+	byte entries = (_b & 0b00111111);
+	return entries;
+}
+
+void ADXL313::clearFifo() {
+	byte mode = getFifoMode(); // get current mode
+	setFifoMode(ADXL313_FIFO_MODE_BYPASS); // set mode to bypass temporarily to clear contents
+	setFifoMode(mode); // return mode to previous selection.
+
+}
+
 void ADXL313::setRegisterBit(byte regAdress, int bitPos, bool state) {
 	byte _b;
 	readFrom(regAdress, 1, &_b);

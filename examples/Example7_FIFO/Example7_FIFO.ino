@@ -19,7 +19,7 @@
   This will allow us to read the entire contents and keep an eye on how full it is
   getting before each read. This will help us fine tune how much time we have
   between each read to do other things. (in this example, we are simplly going to do
-  a delay, but you could choose to do more useful things).
+  a delay adn print dots, but you could choose to do more useful things).
 
   **SPI app note***
   Note, this example uses I2C to communicate the the sensor.
@@ -211,7 +211,7 @@ void loop()
   }
 }
 
-// activity or inactivity has caused an interrupt
+// watermark has caused an interrupt
 void int1_ISR()
 {
   interruptFlag = true;

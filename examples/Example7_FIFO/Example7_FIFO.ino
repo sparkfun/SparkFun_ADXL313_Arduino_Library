@@ -30,7 +30,7 @@
   ///// FIFO setup //////
   Stream mode
   Trigger INT1
-  Watermark Threshold (aka (samples in FIFO_CTL register)): 20
+  Watermark Threshold (aka (samples in FIFO_CTL register)): 30
 
   ///// Interrupt setup //////
   Enable watermark interrupt.

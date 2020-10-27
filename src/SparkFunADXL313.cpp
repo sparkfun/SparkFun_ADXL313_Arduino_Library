@@ -487,22 +487,10 @@ byte ADXL313::getBandwidth(){
 /************************* TRIGGER CHECK  ***************************/
 /*                                                                  */
 // Check if Action was Triggered in Interrupts
-// Example triggered(interrupts, ADXL313_SINGLE_TAP);
+// Example triggered(interrupts, ADXL313_DATA_READY);
 bool ADXL313::triggered(byte interrupts, int mask){
 	return ((interrupts >> mask) & 1);
 }
-
-/*
- ADXL313_DATA_READY
- ADXL313_SINGLE_TAP
- ADXL313_DOUBLE_TAP
- ADXL313_ACTIVITY
- ADXL313_INACTIVITY
- ADXL313_FREE_FALL
- ADXL313_WATERMARK
- ADXL313_OVERRUNY
- */
-
 
 byte ADXL313::getInterruptSource() {
 	byte _b;
@@ -520,37 +508,10 @@ bool ADXL313::getInterruptMapping(byte interruptBit) {
 
 // /*********************** INTERRUPT MAPPING **************************/
 // /*         Set the Mapping of an Interrupt to pin1 or pin2          */
-// // eg: setInterruptMapping(ADXL313_INT_DOUBLE_TAP_BIT,ADXL313_INT2_PIN);
+// // eg: setInterruptMapping(ADXL313_INT_WATERMARK_BIT,ADXL313_INT2_PIN);
  void ADXL313::setInterruptMapping(byte interruptBit, bool interruptPin) {
  	setRegisterBit(ADXL313_INT_MAP, interruptBit, interruptPin);
  }
-
-// void ADXL313::setImportantInterruptMapping(int single_tap, int double_tap, int free_fall, int activity, int inactivity) {
-// 	if(single_tap == 1) {
-// 		setInterruptMapping( ADXL313_INT_SINGLE_TAP_BIT,   ADXL313_INT1_PIN );}
-// 	else if(single_tap == 2) {
-// 		setInterruptMapping( ADXL313_INT_SINGLE_TAP_BIT,   ADXL313_INT2_PIN );}
-
-// 	if(double_tap == 1) {
-// 		setInterruptMapping( ADXL313_INT_DOUBLE_TAP_BIT,   ADXL313_INT1_PIN );}
-// 	else if(double_tap == 2) {
-// 		setInterruptMapping( ADXL313_INT_DOUBLE_TAP_BIT,   ADXL313_INT2_PIN );}
-
-// 	if(free_fall == 1) {
-// 		setInterruptMapping( ADXL313_INT_FREE_FALL_BIT,   ADXL313_INT1_PIN );}
-// 	else if(free_fall == 2) {
-// 		setInterruptMapping( ADXL313_INT_FREE_FALL_BIT,   ADXL313_INT2_PIN );}
-
-// 	if(activity == 1) {
-// 		setInterruptMapping( ADXL313_INT_ACTIVITY_BIT,   ADXL313_INT1_PIN );}
-// 	else if(activity == 2) {
-// 		setInterruptMapping( ADXL313_INT_ACTIVITY_BIT,   ADXL313_INT2_PIN );}
-
-// 	if(inactivity == 1) {
-// 		setInterruptMapping( ADXL313_INT_INACTIVITY_BIT,   ADXL313_INT1_PIN );}
-// 	else if(inactivity == 2) {
-// 		setInterruptMapping( ADXL313_INT_INACTIVITY_BIT,   ADXL313_INT2_PIN );}
-// }
 
 bool ADXL313::isInterruptEnabled(byte interruptBit) {
 	return getRegisterBit(ADXL313_INT_ENABLE,interruptBit);

@@ -1,0 +1,156 @@
+#########################################################
+# Syntax Coloring Map for SparkFun LSM9DS1 9DOF Library #
+#########################################################
+# Class
+#########################################################
+
+ADXL313	KEYWORD1
+
+#########################################################
+# Methods and Functions
+#########################################################
+
+dataReady	KEYWORD2
+activity	KEYWORD2
+inactivity	KEYWORD2
+watermark	KEYWORD2
+overrun	KEYWORD2
+
+x	KEYWORD2
+y	KEYWORD2
+z	KEYWORD2
+status	KEYWORD2
+error_code	KEYWORD2
+gains	KEYWORD2
+intSource	KEYWORD2
+begin	KEYWORD2
+beginSPI	KEYWORD2
+isConnected	KEYWORD2
+checkPartId	KEYWORD2
+dataReady	KEYWORD2
+updateIntSourceStatuses	KEYWORD2
+measureModeOn	KEYWORD2
+softReset	KEYWORD2
+standby	KEYWORD2
+readAccel	KEYWORD2
+autosleepOn	KEYWORD2
+autosleepOff	KEYWORD2
+getFifoMode	KEYWORD2
+setFifoMode	KEYWORD2
+setFifoSamplesThreshhold	KEYWORD2
+getFifoSamplesThreshhold	KEYWORD2
+getFifoEntriesAmount	KEYWORD2
+clearFifo	KEYWORD2
+setAxisGains	KEYWORD2
+getAxisGains	KEYWORD2
+setAxisOffset	KEYWORD2
+getAxisOffset	KEYWORD2
+setActivityThreshold	KEYWORD2
+getActivityThreshold	KEYWORD2
+setInactivityThreshold	KEYWORD2
+getInactivityThreshold	KEYWORD2
+setTimeInactivity	KEYWORD2
+getTimeInactivity	KEYWORD2
+isActivityXEnabled	KEYWORD2
+isActivityYEnabled	KEYWORD2
+isActivityZEnabled	KEYWORD2
+isInactivityXEnabled	KEYWORD2
+isInactivityYEnabled	KEYWORD2
+isInactivityZEnabled	KEYWORD2
+isActivityAc	KEYWORD2
+isInactivityAc	KEYWORD2
+setActivityAc	KEYWORD2
+setInactivityAc	KEYWORD2
+setActivityX	KEYWORD2
+setActivityY	KEYWORD2
+setActivityZ	KEYWORD2
+setActivityXYZ	KEYWORD2
+setInactivityX	KEYWORD2
+setInactivityY	KEYWORD2
+setInactivityZ	KEYWORD2
+setInactivityXYZ	KEYWORD2
+isActivitySourceOnX	KEYWORD2
+isActivitySourceOnY	KEYWORD2
+isActivitySourceOnZ	KEYWORD2
+isAsleep	KEYWORD2
+isLowPower	KEYWORD2
+lowPowerOn	KEYWORD2
+lowPowerOff	KEYWORD2
+getRate	KEYWORD2
+setRate	KEYWORD2
+setBandwidth	KEYWORD2
+getBandwidth	KEYWORD2
+triggered	KEYWORD2
+getInterruptSource	KEYWORD2
+getInterruptMapping	KEYWORD2
+setInterruptMapping	KEYWORD2
+isInterruptEnabled	KEYWORD2
+setInterrupt	KEYWORD2
+InactivityINT	KEYWORD2
+ActivityINT	KEYWORD2
+DataReadyINT	KEYWORD2
+WatermarkINT	KEYWORD2
+OverrunINT	KEYWORD2
+getRange	KEYWORD2
+setRange	KEYWORD2
+getSelfTestBit	KEYWORD2
+setSelfTestBit	KEYWORD2
+getSpiBit	KEYWORD2
+setSpiBit	KEYWORD2
+getInterruptLevelBit	KEYWORD2
+setInterruptLevelBit	KEYWORD2
+getFullResBit	KEYWORD2
+setFullResBit	KEYWORD2
+getJustifyBit	KEYWORD2
+setJustifyBit	KEYWORD2
+printAllRegister	KEYWORD2
+
+#########################################################
+# Constants
+#########################################################
+
+ADXL313_I2C_ADDRESS_DEFAULT	LITERAL1
+ADXL313_I2C_ADDRESS_ALT	LITERAL1
+ADXL313_CS_PIN_DEFAULT	LITERAL1
+ADXL313_INT1_PIN	LITERAL1
+ADXL313_INT2_PIN	LITERAL1
+ADXL313_INT_DATA_READY_BIT	LITERAL1
+ADXL313_INT_ACTIVITY_BIT	LITERAL1
+ADXL313_INT_INACTIVITY_BIT	LITERAL1
+ADXL313_INT_WATERMARK_BIT	LITERAL1
+ADXL313_INT_OVERRUN_BIT	LITERAL1
+ADXL313_DATA_READY	LITERAL1
+ADXL313_ACTIVITY	LITERAL1
+ADXL313_INACTIVITY	LITERAL1
+ADXL313_WATERMARK	LITERAL1
+ADXL313_OVERRUN	LITERAL1
+ADXL313_RANGE_05_G	LITERAL1
+ADXL313_RANGE_1_G	LITERAL1
+ADXL313_RANGE_2_G	LITERAL1
+ADXL313_RANGE_4_G	LITERAL1
+ADXL313_I2C_DISABLE_BIT	LITERAL1
+ADXL313_LINK_BIT	LITERAL1
+ADXL313_AUTOSLEEP_BIT	LITERAL1
+ADXL313_MEASURE_BIT	LITERAL1
+ADXL313_SLEEP_BIT	LITERAL1
+ADXL313_BW_1600	LITERAL1
+ADXL313_BW_800	LITERAL1
+ADXL313_BW_400	LITERAL1
+ADXL313_BW_200	LITERAL1
+ADXL313_BW_100	LITERAL1
+ADXL313_BW_50	LITERAL1
+ADXL313_BW_25	LITERAL1
+ADXL313_BW_12_5	LITERAL1
+ADXL313_BW_6_25	LITERAL1
+ADXL313_BW_3_125	LITERAL1
+ADXL313_FIFO_MODE_BYPASS	LITERAL1
+ADXL313_FIFO_MODE_FIFO	LITERAL1
+ADXL313_FIFO_MODE_STREAM	LITERAL1
+ADXL313_FIFO_MODE_TRIGGER	LITERAL1
+ADXL313_OK	LITERAL1
+ADXL313_ERROR	LITERAL1
+ADXL313_NO_ERROR	LITERAL1
+ADXL313_READ_ERROR	LITERAL1
+ADXL313_BAD_ARG	LITERAL1
+
+

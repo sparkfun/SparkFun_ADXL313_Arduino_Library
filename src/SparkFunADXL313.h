@@ -251,7 +251,6 @@ public:
 	void setInterruptMapping(byte interruptBit, bool interruptPin);
 	bool isInterruptEnabled(byte interruptBit);
 	void setInterrupt(byte interruptBit, bool state);
-	void setImportantInterruptMapping(int single_tap, int double_tap, int free_fall, int activity, int inactivity);
 	void InactivityINT(bool status);
 	void ActivityINT(bool status);
 	void DataReadyINT(bool status);

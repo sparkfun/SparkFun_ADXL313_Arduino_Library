@@ -1,13 +1,13 @@
-SparkFun ProDriver TC78H670FTG Arduino Library
+SparkFun 3-Axis Digital Accelerometer Breakout - ADXL313 (Qwiic)
 ===========================================================
 
-![SparkFun ProDriver - Stepper Motor Driver (TC78H670FTG)](https://cdn.sparkfun.com//assets/parts/1/5/7/5/7/16836-SparkFun_ProDriver_-_Stepper_Motor_Driver__TC78H670FTG_-01a.jpg)
+![SparkFun 3-Axis Digital Accelerometer Breakout - ADXL313 (Qwiic)](link.jpg)
 
-[*SparkFun ProDriver - Stepper Motor Driver (TC78H670FTG) (ROB-16836)*](https://www.sparkfun.com/products/16836)
+[*SparkFun 3-Axis Digital Accelerometer Breakout - ADXL313 (Qwiic) (SEN-17241)*](https://www.sparkfun.com/products/17241)
 
-The SparkFun ProDriver makes it easy to start developing with the TC78H670FTG bipolar stepper motor driver from Toshiba! Latch terminals provide instant solder-less connections to every feature offered. Use our extensive Arduino Library with 10 examples, and you can quickly explore the many features of this precise and small package size motor driver IC.
+The ADXL313 is a low power, high resolution (up to 13-bits) 3-axis accelerometer for measurement up to ±4g. It measures the static acceleration of gravity in tilt-sensing applications, as well as dynamic acceleration resulting from motion or shock. Digital output data is formatted as 16-bit twos complement and is accessible through the on board Qwiic connectors (I<sup>2</sup>C) or SPI. Its high resolution and low noise enable resolution of inclination changes of as little as 0.1°, while a built-in FIFO facilitates using oversampling techniques to improve resolution to as little as 0.025° of inclination. The integrated 32-level FIFO can also be used to store data to minimize host processor intervention, resulting in reduced system power consumption. Additional low power modes enable intelligent motion-based power management with threshold sensing and active acceleration measurement at extremely low power dissipation. 
 
-In addition to high resolution control (down to 1/128th of a step), the ProDriver can be controlled via traditional clock-in stepping or serial commands. Both methods are  demonstrated in the Arduino Library. The serial command method is especially unique in that it allows the user to precisely control the phase, torque, current limit and mixed decay ratio of each coil immediately during stepping. Most stepper motor driver ICs require using an external trimpot to set the current limit, but with the ProDriver, you can precisely adjust this via serial commands!
+Getting the ADXL313 Qwiic breakout set-up is easy. Simply supply the accelerometer with power and communication via the Qwiic connector to your chosen Qwiic development board and you will be good to go. Example use cases for the ADXL313 from Analog Devices include car alarm, hill start aid (HSA) systems, electronic parking brakes, and data recorders applications  (black boxes).
 
 Repository Contents
 -------------------
@@ -19,9 +19,9 @@ Repository Contents
 
 Documentation
 --------------
-* **[SparkFun ProDriver Hookup Guide](https://learn.sparkfun.com/tutorials/toshiba-stepper-motor-driver-prodriver)** - Hookup guide for the SparkFun ProDriver
+* **[Hookup Guide](https://learn.sparkfun.com/tutorials/toshiba-stepper-motor-driver-prodriver)** - Hookup guide for the SparkFun Qwiic 3-Axis Accelerometer (ADXL313)
 * **[Installing an Arduino Library Guide](https://learn.sparkfun.com/tutorials/installing-an-arduino-library)** - Basic information on how to install an Arduino library.
-* **[Product Repository](https://github.com/sparkfun/SparkFun_ProDriver_TC78H670FTG)** - Main repository (including hardware files)
+* **[Product Repository](https://github.com/sparkfun/SparkFun_Qwiic_ADXL313)** - Main hardware repository (including schematic and board design files)
 
 License Information
 -------------------

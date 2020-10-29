@@ -155,7 +155,7 @@ public:
 	// - i2C port (Note, only on "begin()" funtion, for use with I2C com interface)
 	//   defaults to Wire, but if hardware supports it, can use other TwoWire ports.
 	//   **For SPI use "beginSPI()", and only send first two address arguments.
-	bool begin(uint8_t address = ADXL313_I2C_ADDRESS_ALT, TwoWire &wirePort = Wire); //By default use the default I2C addres, and use Wire port
+	bool begin(uint8_t address = ADXL313_I2C_ADDRESS_DEFAULT, TwoWire &wirePort = Wire); //By default use the default I2C addres, and use Wire port
 	bool beginSPI(uint8_t CS_pin = ADXL313_CS_PIN_DEFAULT);
 
 

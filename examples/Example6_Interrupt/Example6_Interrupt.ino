@@ -123,14 +123,14 @@ void setup()
   Serial.println(myAdxl.isInterruptEnabled(ADXL313_INT_INACTIVITY_BIT));
   Serial.print("dataReady int enable: ");
   Serial.println(myAdxl.isInterruptEnabled(ADXL313_INT_DATA_READY_BIT));
-  delay(5000);
+  delay(1000);
 
   attachInterrupt(digitalPinToInterrupt(2), int1_ISR, RISING); // note, the INT output on the ADXL313 is default active HIGH.
 }
 
 void loop()
 {
-  if (interruptFlag == true) // sensor is awake (this variable is only ever set true in ACT_INACT_ISR)
+  if (interruptFlag == true) // sensor is awake (this variable is only ever set true in int1_ISR)
   {
     // interrupt has fired
     // check to see what type of detection it was
@@ -150,16 +150,20 @@ void loop()
     }
   }
 
-  if (awake && myAdxl.intSource.dataReady)
+  if (awake == true)
   {
-    myAdxl.readAccel(); // read all 3 axis, they are stored in class variables: myAdxl.x, myAdxl.y and myAdxl.z
-    Serial.print("x: ");
-    Serial.print(myAdxl.x);
-    Serial.print("\ty: ");
-    Serial.print(myAdxl.y);
-    Serial.print("\tz: ");
-    Serial.print(myAdxl.z);
-    Serial.println();
+    myAdxl.updateIntSourceStatuses(); // this will update all class intSource.xxxxx variables by reading int source bits.
+    if (myAdxl.intSource.dataReady == true)
+    {
+      myAdxl.readAccel(); // read all 3 axis, they are stored in class variables: myAdxl.x, myAdxl.y and myAdxl.z
+      Serial.print("x: ");
+      Serial.print(myAdxl.x);
+      Serial.print("\ty: ");
+      Serial.print(myAdxl.y);
+      Serial.print("\tz: ");
+      Serial.print(myAdxl.z);
+      Serial.println();
+    }
   }
   delay(50);
 }

@@ -80,7 +80,7 @@ void setup()
 
 void loop()
 {
-  updateIntSourceStatuses(); // this will update all class intSource.xxxxx variables by reading int source bits.
+  myAdxl.updateIntSourceStatuses(); // this will update all class intSource.xxxxx variables by reading int source bits.
 
   if(myAdxl.intSource.dataReady) // check data ready interrupt bit
   {

@@ -26,7 +26,7 @@
   ARDUINO --> ADXL313
   SDA (A4) --> SDA
   SCL (A5) --> SCL
-  GND --> 3.3V
+  3.3V --> 3.3V
   GND --> GND
 
   This program is distributed in the hope that it will be useful,

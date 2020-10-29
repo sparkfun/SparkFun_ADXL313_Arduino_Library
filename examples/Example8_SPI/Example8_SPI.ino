@@ -20,14 +20,22 @@
 	SparkFun 3-Axis Digital Accelerometer Breakout - ADXL313 (Qwiic) Version: 1.0
 
   Hardware Connections:
-  Use a qwiic cable to connect from the Redboard Qwiic to the ADXL313 breakout (QWIIC).
-  You can also choose to wire up the connections using the header pins like so:
+  Note, Some of the pins on the ADXL313 are used for both I2C and SPI.
+  The top side of the board has the pins labeled for I2C.
+  The bottom side of the board has the pins labeled for SPI (CS/SDO/SCLK/SDI)
 
-  ARDUINO --> ADXL313
-  SDA (A4) --> SDA
-  SCL (A5) --> SCL
-  GND --> 3.3V
-  GND --> GND
+  Also note, this example uses 4-wire connection SPI.
+  
+  Wire up the connections like so:
+
+  ARDUINO    -->   ADXL313
+  D10        -->   CS
+  D12 (CIPO) -->   SDO
+  D13 (SCK)  -->   SCLK
+  D11 (COPI) -->   SDI   
+  3.3V       -->   3.3V
+  GND        -->   GND
+
 
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of

@@ -47,8 +47,10 @@ boolean ADXL313::begin(uint8_t deviceAddress, TwoWire &wirePort)
   	_deviceAddress = deviceAddress;
   	_i2cPort = &wirePort;
   	I2C = true;
-  	if (isConnected() == false)
-    	return (false); //Check for sensor presence
+  	if (isConnected() == false) // Check for sensor by verifying ACK response
+    	return (false); 
+	if (checkPartId() == false) // Check for sensor Part ID
+		return (false);
   	return (true); //We're all setup!
 }
 
@@ -74,12 +76,13 @@ boolean ADXL313::beginSPI(uint8_t CS_pin)
 
 	// since we can't simply check for an "ACK" like in I2C,
 	// we will check PART ID, to verify that it's there and working
-  	if (checkPartId() != false) 
-    	return (false); //Check for sensor presence
+  	if (checkPartId() == false) // Check for sensor Part ID
+    	return (false);
 
   	return (true); //We're all setup!
 }
 
+// Returns true if device's part ID register is correct
 boolean ADXL313::checkPartId() {
 	byte _b;
 	readFrom(ADXL313_PARTID, 1, &_b);

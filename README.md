@@ -1,7 +1,7 @@
 SparkFun 3-Axis Digital Accelerometer Breakout - ADXL313 (Qwiic)
 ===========================================================
 
-![SparkFun 3-Axis Digital Accelerometer Breakout - ADXL313 (Qwiic)](link.jpg)
+[![SparkFun 3-Axis Digital Accelerometer Breakout - ADXL313 (Qwiic)](link.jpg)](https://www.sparkfun.com/products/17241)
 
 [*SparkFun 3-Axis Digital Accelerometer Breakout - ADXL313 (Qwiic) (SEN-17241)*](https://www.sparkfun.com/products/17241)
 

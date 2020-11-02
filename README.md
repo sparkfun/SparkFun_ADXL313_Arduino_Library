@@ -19,7 +19,7 @@ Repository Contents
 
 Documentation
 --------------
-* **[Hookup Guide](https://learn.sparkfun.com/tutorials/toshiba-stepper-motor-driver-prodriver)** - Hookup guide for the SparkFun Qwiic 3-Axis Accelerometer (ADXL313)
+* **[Hookup Guide](https://learn.sparkfun.com/tutorials/sparkfun-qwiic-3-axis-accelerometer-adxl313-hookup-guide)** - Hookup guide for the SparkFun Qwiic 3-Axis Accelerometer (ADXL313)
 * **[Installing an Arduino Library Guide](https://learn.sparkfun.com/tutorials/installing-an-arduino-library)** - Basic information on how to install an Arduino library.
 * **[Product Repository](https://github.com/sparkfun/SparkFun_Qwiic_ADXL313)** - Main hardware repository (including schematic and board design files)
 

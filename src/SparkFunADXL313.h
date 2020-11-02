@@ -5,6 +5,10 @@
   Original Creation Date: September 19, 2020
   https://github.com/sparkfun/SparkFun_ADXL313_Arduino_Library
 
+  Some of this code was copied/tweaked from an Arduino Library for the ADXL345
+  Written by E. Roberts @ SparkFun Electronics
+  Created: Jul 13, 2016
+  https://github.com/sparkfun/SparkFun_ADXL345_Arduino_Library
   This file defines all registers internal to the ADXL313.
 
   Development environment specifics:

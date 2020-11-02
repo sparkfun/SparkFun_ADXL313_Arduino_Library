@@ -74,7 +74,7 @@
 ******************************************************************************/
 
 #include <Wire.h>
-#include <SparkFunADXL313.h>
+#include <SparkFunADXL313.h> //Click here to get the library: http://librarymanager/All#SparkFun_ADXL313
 ADXL313 myAdxl;
 
 bool interruptFlag = false; // global variabl to keep track of new interrupts. Only ever set true by ISR

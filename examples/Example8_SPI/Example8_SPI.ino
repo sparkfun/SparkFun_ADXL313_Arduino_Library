@@ -47,7 +47,7 @@
 ******************************************************************************/
 
 #include <SPI.h>
-#include <SparkFunADXL313.h>
+#include <SparkFunADXL313.h> //Click here to get the library: http://librarymanager/All#SparkFun_ADXL313
 ADXL313 myAdxl;
 
 void setup()

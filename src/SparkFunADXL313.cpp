@@ -151,16 +151,16 @@ float ADXL313::getRange() {
 	byte range = (_b & 0b00000011);
 	float range_val;
 	switch (range) {
-		case ADXL313_RANGE_05_G:
+		case 0:
 			range_val = 0.5;
 			break;
-		case ADXL313_RANGE_1_G:
+		case 1:
 			range_val = 1.0;
 			break;
-		case ADXL313_RANGE_2_G:
+		case 2:
 			range_val = 2.0;
 			break;
-		case ADXL313_RANGE_4_G:
+		case 3:
 			range_val = 4.0;
 			break;
 	}

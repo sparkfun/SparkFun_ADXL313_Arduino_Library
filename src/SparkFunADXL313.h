@@ -43,6 +43,7 @@
 
 #include "ADXL313_Registers.h"
 #include "Wire.h"
+#include <SPI.h>
 
 #define ADXL313_I2C_ADDRESS_DEFAULT 	0x1D
 #define ADXL313_I2C_ADDRESS_ALT 0x53
@@ -114,11 +115,11 @@
 struct ADXL313IntSource
 {
   public:
-    bool dataReady;
-    bool activity;
-	bool inactivity;
-	bool watermark;
-	bool overrun;
+    boolean dataReady;
+    boolean activity;
+	boolean inactivity;
+	boolean watermark;
+	boolean overrun;
 };
 
 
@@ -132,7 +133,7 @@ public:
 	// These values are the RAW signed 16-bit readings from the sensor.
 	int16_t x, y, z; // x, y, and z axis readings of the accelerometer
 
-	bool status;					// Set When Error Exists 
+	boolean status;					// Set When Error Exists 
 
 	byte error_code;				// Initial State
 	double gains[3];				// Counts to Gs
@@ -159,12 +160,12 @@ public:
 	// - i2C port (Note, only on "begin()" funtion, for use with I2C com interface)
 	//   defaults to Wire, but if hardware supports it, can use other TwoWire ports.
 	//   **For SPI use "beginSPI()", and only send first two address arguments.
-	bool begin(uint8_t address = ADXL313_I2C_ADDRESS_DEFAULT, TwoWire &wirePort = Wire); //By default use the default I2C addres, and use Wire port
-	bool beginSPI(uint8_t CS_pin = ADXL313_CS_PIN_DEFAULT);
+	boolean begin(uint8_t address = ADXL313_I2C_ADDRESS_DEFAULT, TwoWire &wirePort = Wire); //By default use the default I2C addres, and use Wire port
+	boolean beginSPI(uint8_t CS_pin = ADXL313_CS_PIN_DEFAULT, SPIClass &spiPort = SPI);
 
 
-	bool isConnected();
-	bool checkPartId();
+	boolean isConnected();
+	boolean checkPartId();
 
 	// dataReady() -- REads the entire INT_Source register, and checks the DATA_READY bit
 	// to see if new data is available.
@@ -172,20 +173,20 @@ public:
 	// If you need to know the other int source bits, then use updateIntSourceStatuses()
 	// Output:	1 - New data available
 	//			0 - No new data available
-	bool dataReady();
+	boolean dataReady();
 
 	// updateIntSourceStatuses() -- Reads the entire INT_Source register, 
 	// and stores all of the int statuses in class variables.
 	// note, this will clear all INT source bits.
 	// Output:	1 - function completed
 	//			0 - Communication failure
-	bool updateIntSourceStatuses();
+	boolean updateIntSourceStatuses();
 
-	bool measureModeOn();
+	boolean measureModeOn();
 
-	bool softReset();
+	boolean softReset();
 
-	bool standby();
+	boolean standby();
 	
 	// readAccel() -- Read the sensors output registers.
 	// This function will read all six accelerometer output registers.
@@ -193,8 +194,8 @@ public:
 	// those _after_ calling readAccel().
 	void readAccel();
 
-	bool autosleepOn();
-	bool autosleepOff();
+	boolean autosleepOn();
+	boolean autosleepOff();
 
 	byte getFifoMode();
 	void setFifoMode(byte mode);
@@ -214,32 +215,32 @@ public:
 	void setTimeInactivity(int timeInactivity);
 	int getTimeInactivity();
 	
-	bool isActivityXEnabled();
-	bool isActivityYEnabled();
-	bool isActivityZEnabled();
-	bool isInactivityXEnabled();
-	bool isInactivityYEnabled();
-	bool isInactivityZEnabled();
-	bool isActivityAc();
-	bool isInactivityAc();
-	void setActivityAc(bool state);
-	void setInactivityAc(bool state);
+	boolean isActivityXEnabled();
+	boolean isActivityYEnabled();
+	boolean isActivityZEnabled();
+	boolean isInactivityXEnabled();
+	boolean isInactivityYEnabled();
+	boolean isInactivityZEnabled();
+	boolean isActivityAc();
+	boolean isInactivityAc();
+	void setActivityAc(boolean state);
+	void setInactivityAc(boolean state);
 	
-	void setActivityX(bool state);
-	void setActivityY(bool state);
-	void setActivityZ(bool state);
-	void setActivityXYZ(bool stateX, bool stateY, bool stateZ);
-	void setInactivityX(bool state);
-	void setInactivityY(bool state);
-	void setInactivityZ(bool state);
-	void setInactivityXYZ(bool stateX, bool stateY, bool stateZ);
+	void setActivityX(boolean state);
+	void setActivityY(boolean state);
+	void setActivityZ(boolean state);
+	void setActivityXYZ(boolean stateX, boolean stateY, boolean stateZ);
+	void setInactivityX(boolean state);
+	void setInactivityY(boolean state);
+	void setInactivityZ(boolean state);
+	void setInactivityXYZ(boolean stateX, boolean stateY, boolean stateZ);
 	
-	bool isActivitySourceOnX();
-	bool isActivitySourceOnY();
-	bool isActivitySourceOnZ();
-	bool isAsleep();
+	boolean isActivitySourceOnX();
+	boolean isActivitySourceOnY();
+	boolean isActivitySourceOnZ();
+	boolean isAsleep();
 	
-	bool isLowPower();
+	boolean isLowPower();
 	void lowPowerOn();
 	void lowPowerOff();
 	double getRate();
@@ -247,37 +248,38 @@ public:
 	void setBandwidth(byte bw);
 	byte getBandwidth();
 	
-	bool triggered(byte interrupts, int mask);
+	boolean triggered(byte interrupts, int mask);
 	
 	byte getInterruptSource();
-	bool getInterruptSource(byte interruptBit);
-	bool getInterruptMapping(byte interruptBit);
-	void setInterruptMapping(byte interruptBit, bool interruptPin);
-	bool isInterruptEnabled(byte interruptBit);
-	void setInterrupt(byte interruptBit, bool state);
-	void InactivityINT(bool status);
-	void ActivityINT(bool status);
-	void DataReadyINT(bool status);
-	void WatermarkINT(bool status);
-	void OverrunINT(bool status);
+	boolean getInterruptSource(byte interruptBit);
+	boolean getInterruptMapping(byte interruptBit);
+	void setInterruptMapping(byte interruptBit, boolean interruptPin);
+	boolean isInterruptEnabled(byte interruptBit);
+	void setInterrupt(byte interruptBit, boolean state);
+	void InactivityINT(boolean status);
+	void ActivityINT(boolean status);
+	void DataReadyINT(boolean status);
+	void WatermarkINT(boolean status);
+	void OverrunINT(boolean status);
 	
 	float getRange();
 	void setRange(byte range);
-	bool getSelfTestBit();
-	void setSelfTestBit(bool selfTestBit);
-	bool getSpiBit();
-	void setSpiBit(bool spiBit);
-	bool getInterruptLevelBit();
-	void setInterruptLevelBit(bool interruptLevelBit);
-	bool getFullResBit();
-	void setFullResBit(bool fullResBit);
-	bool getJustifyBit();
-	void setJustifyBit(bool justifyBit);
+	boolean getSelfTestBit();
+	void setSelfTestBit(boolean selfTestBit);
+	boolean getSpiBit();
+	void setSpiBit(boolean spiBit);
+	boolean getInterruptLevelBit();
+	void setInterruptLevelBit(boolean interruptLevelBit);
+	boolean getFullResBit();
+	void setFullResBit(boolean fullResBit);
+	boolean getJustifyBit();
+	void setJustifyBit(boolean justifyBit);
 	void printAllRegister();
 	
 private:
 
 	TwoWire *_i2cPort;
+	SPIClass *_spiPort;
 	uint8_t _deviceAddress;
 
 	void writeTo(byte address, byte val);
@@ -286,12 +288,12 @@ private:
 	void readFrom(byte address, int num, byte buff[]);
 	void readFromI2C(byte address, int num, byte buff[]);
 	void readFromSPI(byte address, int num, byte buff[]);
-	void setRegisterBit(byte regAdress, int bitPos, bool state);
-	bool getRegisterBit(byte regAdress, int bitPos);  
+	void setRegisterBit(byte regAdress, int bitPos, boolean state);
+	boolean getRegisterBit(byte regAdress, int bitPos);  
 	
 	byte _buff[6] ;		//	6 Bytes Buffer
 	int _CS = ADXL313_CS_PIN_DEFAULT;
-	bool I2C = true;
+	boolean I2C = true;
 	unsigned long SPIfreq = 5000000;
 };
 void print_byte(byte val);

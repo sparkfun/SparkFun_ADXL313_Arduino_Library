@@ -70,12 +70,13 @@ boolean ADXL313::isConnected()
 
 //Initializes the sensor with basic settings via SPI
 //Returns false if sensor is not detected
-boolean ADXL313::beginSPI(uint8_t CS_pin)
+boolean ADXL313::beginSPI(uint8_t CS_pin, SPIClass &spiPort)
 {
 	_CS = CS_pin;
+	_spiPort = &spiPort;
 	I2C = false;
-	SPI.begin();
-	SPI.setDataMode(SPI_MODE3);
+	_spiPort->begin(_CS);
+	_spiPort->setDataMode(SPI_MODE3);
 	pinMode(_CS, OUTPUT);
 	digitalWrite(_CS, HIGH);
 
@@ -100,7 +101,7 @@ boolean ADXL313::dataReady() {
 	return getRegisterBit(ADXL313_INT_SOURCE, ADXL313_INT_DATA_READY_BIT);	// check the dataReady bit 
 }
 
-bool ADXL313::updateIntSourceStatuses() {
+boolean ADXL313::updateIntSourceStatuses() {
 	byte _b;
 	readFrom(ADXL313_INT_SOURCE, 1, &_b);
 	intSource.dataReady = ((_b >> ADXL313_INT_DATA_READY_BIT) & 1);
@@ -112,19 +113,19 @@ bool ADXL313::updateIntSourceStatuses() {
 	return (true);
 }
 
-bool ADXL313::standby() {
+boolean ADXL313::standby() {
 	// clears the measure bit, putting decive in standby mode, ready for configuration
 	setRegisterBit(ADXL313_POWER_CTL, ADXL313_MEASURE_BIT, false);
 	return (true);
 }
 
-bool ADXL313::measureModeOn() {
+boolean ADXL313::measureModeOn() {
 	// sets the measure bit, putting decive in measure mode, ready for reading data
 	setRegisterBit(ADXL313_POWER_CTL, ADXL313_MEASURE_BIT, true);
 	return (true);
 }
 
-bool ADXL313::softReset() {
+boolean ADXL313::softReset() {
 	// soft reset clears all settings, and puts it in standby mode
 	writeTo(ADXL313_SOFT_RESET, 0x52);
 	return (true);
@@ -194,7 +195,7 @@ void ADXL313::setRange(byte range) {
 
 /*************************** AUTOSLEEP BIT **************************/
 /*                            ~ ON & OFF                           	*/
-bool ADXL313::autosleepOn() {
+boolean ADXL313::autosleepOn() {
 	// sets the autosleep bit
 	// note, prior to calling this, 
 	// you will need to set THRESH_INACT and TIME_INACT.
@@ -206,7 +207,7 @@ bool ADXL313::autosleepOn() {
 	return (true);
 }
 
-bool ADXL313::autosleepOff() {
+boolean ADXL313::autosleepOff() {
 	// clears the autosleep bit
 	setRegisterBit(ADXL313_POWER_CTL, ADXL313_AUTOSLEEP_BIT, false);
 	return (true);
@@ -214,44 +215,44 @@ bool ADXL313::autosleepOff() {
 
 /*************************** SELF_TEST BIT **************************/
 /*                            ~ GET & SET                           */
-bool ADXL313::getSelfTestBit() {
+boolean ADXL313::getSelfTestBit() {
 	return getRegisterBit(ADXL313_DATA_FORMAT, 7);
 }
 
 // If Set (1) Self-Test Applied. Electrostatic Force exerted on the sensor
 //  causing a shift in the output data.
 // If Set (0) Self-Test Disabled.
-void ADXL313::setSelfTestBit(bool selfTestBit) {
+void ADXL313::setSelfTestBit(boolean selfTestBit) {
 	setRegisterBit(ADXL313_DATA_FORMAT, 7, selfTestBit);
 }
 
 /*************************** SPI BIT STATE **************************/
 /*                           ~ GET & SET                            */
-bool ADXL313::getSpiBit() {
+boolean ADXL313::getSpiBit() {
 	return getRegisterBit(ADXL313_DATA_FORMAT, 6);
 }
 
 // If Set (1) Puts Device in 3-wire Mode
 // If Set (0) Puts Device in 4-wire SPI Mode
-void ADXL313::setSpiBit(bool spiBit) {
+void ADXL313::setSpiBit(boolean spiBit) {
 	setRegisterBit(ADXL313_DATA_FORMAT, 6, spiBit);
 }
 
 /*********************** INT_INVERT BIT STATE ***********************/
 /*                           ~ GET & SET                            */
-bool ADXL313::getInterruptLevelBit() {
+boolean ADXL313::getInterruptLevelBit() {
 	return getRegisterBit(ADXL313_DATA_FORMAT, 5);
 }
 
 // If Set (0) Sets the Interrupts to Active HIGH
 // If Set (1) Sets the Interrupts to Active LOW
-void ADXL313::setInterruptLevelBit(bool interruptLevelBit) {
+void ADXL313::setInterruptLevelBit(boolean interruptLevelBit) {
 	setRegisterBit(ADXL313_DATA_FORMAT, 5, interruptLevelBit);
 }
 
 /************************* FULL_RES BIT STATE ***********************/
 /*                           ~ GET & SET                            */
-bool ADXL313::getFullResBit() {
+boolean ADXL313::getFullResBit() {
 	return getRegisterBit(ADXL313_DATA_FORMAT, 3);
 }
 
@@ -259,19 +260,19 @@ bool ADXL313::getFullResBit() {
 //  Set by the Range Bits to Maintain a 4mg/LSB Scale Factor
 // If Set (0) Device is in 10-bit Mode: Range Bits Determine Maximum G Range
 //  And Scale Factor
-void ADXL313::setFullResBit(bool fullResBit) {
+void ADXL313::setFullResBit(boolean fullResBit) {
 	setRegisterBit(ADXL313_DATA_FORMAT, 3, fullResBit);
 }
 
 /*************************** JUSTIFY BIT STATE **************************/
 /*                           ~ GET & SET                            */
-bool ADXL313::getJustifyBit() {
+boolean ADXL313::getJustifyBit() {
 	return getRegisterBit(ADXL313_DATA_FORMAT, 2);
 }
 
 // If Set (1) Selects the Left Justified Mode
 // If Set (0) Selects Right Justified Mode with Sign Extension
-void ADXL313::setJustifyBit(bool justifyBit) {
+void ADXL313::setJustifyBit(boolean justifyBit) {
 	setRegisterBit(ADXL313_DATA_FORMAT, 2, justifyBit);
 }
 
@@ -378,72 +379,72 @@ int ADXL313::getTimeInactivity() {
 
 /************************** ACTIVITY BITS ***************************/
 /*                                                                  */
-bool ADXL313::isActivityXEnabled() {
+boolean ADXL313::isActivityXEnabled() {
 	return getRegisterBit(ADXL313_ACT_INACT_CTL, 6);
 }
-bool ADXL313::isActivityYEnabled() {
+boolean ADXL313::isActivityYEnabled() {
 	return getRegisterBit(ADXL313_ACT_INACT_CTL, 5);
 }
-bool ADXL313::isActivityZEnabled() {
+boolean ADXL313::isActivityZEnabled() {
 	return getRegisterBit(ADXL313_ACT_INACT_CTL, 4);
 }
-bool ADXL313::isInactivityXEnabled() {
+boolean ADXL313::isInactivityXEnabled() {
 	return getRegisterBit(ADXL313_ACT_INACT_CTL, 2);
 }
-bool ADXL313::isInactivityYEnabled() {
+boolean ADXL313::isInactivityYEnabled() {
 	return getRegisterBit(ADXL313_ACT_INACT_CTL, 1);
 }
-bool ADXL313::isInactivityZEnabled() {
+boolean ADXL313::isInactivityZEnabled() {
 	return getRegisterBit(ADXL313_ACT_INACT_CTL, 0);
 }
 
-void ADXL313::setActivityX(bool state) {
+void ADXL313::setActivityX(boolean state) {
 	setRegisterBit(ADXL313_ACT_INACT_CTL, 6, state);
 }
-void ADXL313::setActivityY(bool state) {
+void ADXL313::setActivityY(boolean state) {
 	setRegisterBit(ADXL313_ACT_INACT_CTL, 5, state);
 }
-void ADXL313::setActivityZ(bool state) {
+void ADXL313::setActivityZ(boolean state) {
 	setRegisterBit(ADXL313_ACT_INACT_CTL, 4, state);
 }
-void ADXL313::setActivityXYZ(bool stateX, bool stateY, bool stateZ) {
+void ADXL313::setActivityXYZ(boolean stateX, boolean stateY, boolean stateZ) {
 	setActivityX(stateX);
 	setActivityY(stateY);
 	setActivityZ(stateZ);
 }
-void ADXL313::setInactivityX(bool state) {
+void ADXL313::setInactivityX(boolean state) {
 	setRegisterBit(ADXL313_ACT_INACT_CTL, 2, state);
 }
-void ADXL313::setInactivityY(bool state) {
+void ADXL313::setInactivityY(boolean state) {
 	setRegisterBit(ADXL313_ACT_INACT_CTL, 1, state);
 }
-void ADXL313::setInactivityZ(bool state) {
+void ADXL313::setInactivityZ(boolean state) {
 	setRegisterBit(ADXL313_ACT_INACT_CTL, 0, state);
 }
-void ADXL313::setInactivityXYZ(bool stateX, bool stateY, bool stateZ) {
+void ADXL313::setInactivityXYZ(boolean stateX, boolean stateY, boolean stateZ) {
 	setInactivityX(stateX);
 	setInactivityY(stateY);
 	setInactivityZ(stateZ);
 }
 
-bool ADXL313::isActivityAc() {
+boolean ADXL313::isActivityAc() {
 	return getRegisterBit(ADXL313_ACT_INACT_CTL, 7);
 }
-bool ADXL313::isInactivityAc(){
+boolean ADXL313::isInactivityAc(){
 	return getRegisterBit(ADXL313_ACT_INACT_CTL, 3);
 }
 
-void ADXL313::setActivityAc(bool state) {
+void ADXL313::setActivityAc(boolean state) {
 	setRegisterBit(ADXL313_ACT_INACT_CTL, 7, state);
 }
-void ADXL313::setInactivityAc(bool state) {
+void ADXL313::setInactivityAc(boolean state) {
 	setRegisterBit(ADXL313_ACT_INACT_CTL, 3, state);
 }
 
 
 /************************** LOW POWER BIT ***************************/
 /*                                                                  */
-bool ADXL313::isLowPower(){
+boolean ADXL313::isLowPower(){
 	return getRegisterBit(ADXL313_BW_RATE, 4);
 }
 void ADXL313::lowPowerOn() {
@@ -496,7 +497,7 @@ byte ADXL313::getBandwidth(){
 /*                                                                  */
 // Check if Action was Triggered in Interrupts
 // Example triggered(interrupts, ADXL313_DATA_READY);
-bool ADXL313::triggered(byte interrupts, int mask){
+boolean ADXL313::triggered(byte interrupts, int mask){
 	return ((interrupts >> mask) & 1);
 }
 
@@ -506,30 +507,30 @@ byte ADXL313::getInterruptSource() {
 	return _b;
 }
 
-bool ADXL313::getInterruptSource(byte interruptBit) {
+boolean ADXL313::getInterruptSource(byte interruptBit) {
 	return getRegisterBit(ADXL313_INT_SOURCE,interruptBit);
 }
 
-bool ADXL313::getInterruptMapping(byte interruptBit) {
+boolean ADXL313::getInterruptMapping(byte interruptBit) {
 	return getRegisterBit(ADXL313_INT_MAP,interruptBit);
 }
 
 // /*********************** INTERRUPT MAPPING **************************/
 // /*         Set the Mapping of an Interrupt to pin1 or pin2          */
 // // eg: setInterruptMapping(ADXL313_INT_WATERMARK_BIT,ADXL313_INT2_PIN);
- void ADXL313::setInterruptMapping(byte interruptBit, bool interruptPin) {
+ void ADXL313::setInterruptMapping(byte interruptBit, boolean interruptPin) {
  	setRegisterBit(ADXL313_INT_MAP, interruptBit, interruptPin);
  }
 
-bool ADXL313::isInterruptEnabled(byte interruptBit) {
+boolean ADXL313::isInterruptEnabled(byte interruptBit) {
 	return getRegisterBit(ADXL313_INT_ENABLE,interruptBit);
 }
 
-void ADXL313::setInterrupt(byte interruptBit, bool state) {
+void ADXL313::setInterrupt(byte interruptBit, boolean state) {
 	setRegisterBit(ADXL313_INT_ENABLE, interruptBit, state);
 }
 
-void ADXL313::ActivityINT(bool status) {
+void ADXL313::ActivityINT(boolean status) {
 	if(status) {
 		setInterrupt( ADXL313_INT_ACTIVITY_BIT,   1);
 	}
@@ -537,7 +538,7 @@ void ADXL313::ActivityINT(bool status) {
 		setInterrupt( ADXL313_INT_ACTIVITY_BIT,   0);
 	}
 }
-void ADXL313::InactivityINT(bool status) {
+void ADXL313::InactivityINT(boolean status) {
 	if(status) {
 		setInterrupt( ADXL313_INT_INACTIVITY_BIT, 1);
 	}
@@ -546,7 +547,7 @@ void ADXL313::InactivityINT(bool status) {
 	}
 }
 
-void ADXL313::DataReadyINT(bool status) {
+void ADXL313::DataReadyINT(boolean status) {
 	if(status) {
 		setInterrupt( ADXL313_INT_DATA_READY_BIT, 1);
 	}
@@ -555,7 +556,7 @@ void ADXL313::DataReadyINT(bool status) {
 	}
 }
 
-void ADXL313::WatermarkINT(bool status) {
+void ADXL313::WatermarkINT(boolean status) {
 	if(status) {
 		setInterrupt( ADXL313_INT_WATERMARK_BIT, 1);
 	}
@@ -564,7 +565,7 @@ void ADXL313::WatermarkINT(bool status) {
 	}
 }
 
-void ADXL313::OverrunINT(bool status) {
+void ADXL313::OverrunINT(boolean status) {
 	if(status) {
 		setInterrupt( ADXL313_INT_OVERRUN_BIT, 1);
 	}
@@ -621,7 +622,7 @@ void ADXL313::clearFifo() {
 
 }
 
-void ADXL313::setRegisterBit(byte regAdress, int bitPos, bool state) {
+void ADXL313::setRegisterBit(byte regAdress, int bitPos, boolean state) {
 	byte _b;
 	readFrom(regAdress, 1, &_b);
 	if (state) {
@@ -633,7 +634,7 @@ void ADXL313::setRegisterBit(byte regAdress, int bitPos, bool state) {
 	writeTo(regAdress, _b);
 }
 
-bool ADXL313::getRegisterBit(byte regAdress, int bitPos) {
+boolean ADXL313::getRegisterBit(byte regAdress, int bitPos) {
 	byte _b;
 	readFrom(regAdress, 1, &_b);
 	return ((_b >> bitPos) & 1);
@@ -692,42 +693,42 @@ void ADXL313::readFrom(byte address, int num, byte _buff[]) {
 /*************************** WRITE TO I2C ***************************/
 /*      Start; Send Register Address; Send Value To Write; End      */
 void ADXL313::writeToI2C(byte _address, byte _val) {
-	Wire.beginTransmission(_deviceAddress);
-	Wire.write(_address);
-	Wire.write(_val);
-	Wire.endTransmission();
+	_i2cPort->beginTransmission(_deviceAddress);
+	_i2cPort->write(_address);
+	_i2cPort->write(_val);
+	_i2cPort->endTransmission();
 }
 
 /*************************** READ FROM I2C **************************/
 /*                Start; Send Address To Read; End                  */
 void ADXL313::readFromI2C(byte address, int num, byte _buff[]) {
-	Wire.beginTransmission(_deviceAddress);
-	Wire.write(address);
-	Wire.endTransmission();
+	_i2cPort->beginTransmission(_deviceAddress);
+	_i2cPort->write(address);
+	_i2cPort->endTransmission();
 
-//	Wire.beginTransmission(ADXL313_DEVICE);
-// Wire.reqeustFrom contains the beginTransmission and endTransmission in it. 
-	Wire.requestFrom(_deviceAddress, num);  // Request 6 Bytes
+//	_i2cPort->beginTransmission(ADXL313_DEVICE);
+// _i2cPort->reqeustFrom contains the beginTransmission and endTransmission in it. 
+	_i2cPort->requestFrom(_deviceAddress, num);  // Request 6 Bytes
 
 	int i = 0;
-	while(Wire.available())
+	while(_i2cPort->available())
 	{
-		_buff[i] = Wire.read();				// Receive Byte
+		_buff[i] = _i2cPort->read();				// Receive Byte
 		i++;
 	}
 	if(i != num){
 		status = ADXL313_ERROR;
 		error_code = ADXL313_READ_ERROR;
 	}
-//	Wire.endTransmission();
+//	_i2cPort->endTransmission();
 }
 
 /************************** WRITE FROM SPI **************************/
 /*         Point to Destination; Write Value; Turn Off              */
 void ADXL313::writeToSPI(byte __reg_address, byte __val) {
   digitalWrite(_CS, LOW);
-  SPI.transfer(__reg_address);
-  SPI.transfer(__val);
+  _spiPort->transfer(__reg_address);
+  _spiPort->transfer(__val);
   digitalWrite(_CS, HIGH);
 }
 
@@ -742,9 +743,9 @@ void ADXL313::readFromSPI(byte __reg_address, int num, byte _buff[]) {
   }
 
   digitalWrite(_CS, LOW);
-  SPI.transfer(_address);		// Transfer Starting Reg Address To Be Read
+  _spiPort->transfer(_address);		// Transfer Starting Reg Address To Be Read
   for(int i=0; i<num; i++){
-    _buff[i] = SPI.transfer(0x00);
+    _buff[i] = _spiPort->transfer(0x00);
   }
   digitalWrite(_CS, HIGH);
 }

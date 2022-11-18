@@ -1,5 +1,7 @@
 SparkFun 3-Axis Digital Accelerometer Breakout - ADXL313 (Qwiic)
 ===========================================================
+[![Compile Examples](https://github.com/sparkfun/SparkFun_ADXL313_Arduino_Library/workflows/Compile%20Examples/badge.svg)](https://github.com/sparkfun/SparkFun_ADXL313_Arduino_Library/actions?workflow=Compile+Examples)
+
 
 [![SparkFun 3-Axis Digital Accelerometer Breakout - ADXL313 (Qwiic)](https://cdn.sparkfun.com//assets/parts/1/6/2/2/4/17241-SparkFun_3-Axis_Digital_Accelerometer_Breakout_-_ADXL313__Qwiic_02.jpg)](https://www.sparkfun.com/products/17241)
 

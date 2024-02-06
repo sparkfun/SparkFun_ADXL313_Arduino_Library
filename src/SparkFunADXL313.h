@@ -68,10 +68,10 @@
 #define ADXL313_OVERRUN					0x00
 
  /********************** RANGE SETTINGS OPTIONS **********************/
-#define ADXL313_RANGE_05_G		1 // 0-0.5G
-#define ADXL313_RANGE_1_G		2 // 0-1G
-#define ADXL313_RANGE_2_G		3 // 0-2G
-#define ADXL313_RANGE_4_G		4 // 0-4G
+#define ADXL313_RANGE_05_G		0 // 0-0.5G
+#define ADXL313_RANGE_1_G		1 // 0-1G
+#define ADXL313_RANGE_2_G		2 // 0-2G
+#define ADXL313_RANGE_4_G		3 // 0-4G
 
  /********************** POWER_CTL BIT POSITION **********************/
 #define ADXL313_I2C_DISABLE_BIT		0x06
@@ -285,8 +285,8 @@ private:
 	void writeTo(byte address, byte val);
 	void writeToI2C(byte address, byte val);
 	void writeToSPI(byte address, byte val);
-	void readFrom(byte address, int num, byte buff[]);
-	void readFromI2C(byte address, int num, byte buff[]);
+	void readFrom(byte address, uint8_t num, byte buff[]);
+	void readFromI2C(byte address, uint8_t num, byte buff[]);
 	void readFromSPI(byte address, int num, byte buff[]);
 	void setRegisterBit(byte regAdress, int bitPos, boolean state);
 	boolean getRegisterBit(byte regAdress, int bitPos);  

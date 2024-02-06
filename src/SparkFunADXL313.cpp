@@ -75,8 +75,8 @@ boolean ADXL313::beginSPI(uint8_t CS_pin, SPIClass &spiPort)
 	_CS = CS_pin;
 	_spiPort = &spiPort;
 	I2C = false;
-	_spiPort->begin(_CS);
-	_spiPort->setDataMode(SPI_MODE3);
+	_spiPort->begin();
+	_spiPort->beginTransaction(SPISettings(2000000, MSBFIRST, SPI_MODE3));
 	pinMode(_CS, OUTPUT);
 	digitalWrite(_CS, HIGH);
 
@@ -295,7 +295,7 @@ void ADXL313::getAxisGains(double *_gains){
 /********************* OFSX, OFSY and OFSZ BYTES ********************/
 /*                           ~ SET & GET                            */
 // OFSX, OFSY and OFSZ: User Offset Adjustments in Twos Complement Format
-// Scale Factor of 15.6mg/LSB
+// Scale Factor of 3.9 mg/LSB
 void ADXL313::setAxisOffset(int x, int y, int z) {
 	writeTo(ADXL313_OFSX, byte (x));
 	writeTo(ADXL313_OFSY, byte (y));
@@ -681,7 +681,7 @@ void ADXL313::writeTo(byte address, byte val) {
 
 /************************ READING NUM BYTES *************************/
 /*    Reads Num Bytes. Starts from Address Reg to _buff Array        */
-void ADXL313::readFrom(byte address, int num, byte _buff[]) {
+void ADXL313::readFrom(byte address, uint8_t num, byte _buff[]) {
 	if(I2C) {
 		readFromI2C(address, num, _buff);	// If I2C Communication
 	}
@@ -701,7 +701,7 @@ void ADXL313::writeToI2C(byte _address, byte _val) {
 
 /*************************** READ FROM I2C **************************/
 /*                Start; Send Address To Read; End                  */
-void ADXL313::readFromI2C(byte address, int num, byte _buff[]) {
+void ADXL313::readFromI2C(byte address, uint8_t num, byte _buff[]) {
 	_i2cPort->beginTransmission(_deviceAddress);
 	_i2cPort->write(address);
 	_i2cPort->endTransmission();

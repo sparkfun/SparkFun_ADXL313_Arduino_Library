@@ -84,6 +84,8 @@ void loop()
     Serial.print(myAdxl.y);
     Serial.print("\tz: ");
     Serial.print(myAdxl.z);
+    Serial.print("\trange: ");
+    Serial.print(myAdxl.getRange());
     Serial.println();
   }
   else

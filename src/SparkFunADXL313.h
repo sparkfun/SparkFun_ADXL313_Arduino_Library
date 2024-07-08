@@ -161,7 +161,7 @@ public:
 	//   defaults to Wire, but if hardware supports it, can use other TwoWire ports.
 	//   **For SPI use "beginSPI()", and only send first two address arguments.
 	boolean begin(uint8_t address = ADXL313_I2C_ADDRESS_DEFAULT, TwoWire &wirePort = Wire); //By default use the default I2C addres, and use Wire port
-	boolean beginSPI(uint8_t CS_pin = ADXL313_CS_PIN_DEFAULT, SPIClass &spiPort = SPI);
+	boolean beginSPI(uint8_t CS_pin = ADXL313_CS_PIN_DEFAULT, SPIClass &spiPort = SPI, uint32_t spi_freq = 5000000); //By default use the default CS pin, and use SPI port
 
 
 	boolean isConnected();
@@ -294,7 +294,7 @@ private:
 	byte _buff[6] ;		//	6 Bytes Buffer
 	int _CS = ADXL313_CS_PIN_DEFAULT;
 	boolean I2C = true;
-	unsigned long SPIfreq = 5000000;
+	unsigned long SPIfreq;
 };
 void print_byte(byte val);
 

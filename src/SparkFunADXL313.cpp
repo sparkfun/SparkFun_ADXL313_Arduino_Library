@@ -70,13 +70,14 @@ boolean ADXL313::isConnected()
 
 //Initializes the sensor with basic settings via SPI
 //Returns false if sensor is not detected
-boolean ADXL313::beginSPI(uint8_t CS_pin, SPIClass &spiPort)
+boolean ADXL313::beginSPI(uint8_t CS_pin, SPIClass &spiPort, uint32_t spi_freq)
 {
 	_CS = CS_pin;
 	_spiPort = &spiPort;
 	I2C = false;
+	SPIfreq = spi_freq;
 	_spiPort->begin();
-	_spiPort->beginTransaction(SPISettings(2000000, MSBFIRST, SPI_MODE3));
+	_spiPort->beginTransaction(SPISettings(SPIfreq, MSBFIRST, SPI_MODE3));
 	pinMode(_CS, OUTPUT);
 	digitalWrite(_CS, HIGH);
 
@@ -726,10 +727,12 @@ void ADXL313::readFromI2C(byte address, uint8_t num, byte _buff[]) {
 /************************** WRITE FROM SPI **************************/
 /*         Point to Destination; Write Value; Turn Off              */
 void ADXL313::writeToSPI(byte __reg_address, byte __val) {
+  _spiPort->beginTransaction(SPISettings(SPIfreq, MSBFIRST, SPI_MODE3));
   digitalWrite(_CS, LOW);
   _spiPort->transfer(__reg_address);
   _spiPort->transfer(__val);
   digitalWrite(_CS, HIGH);
+  _spiPort->endTransaction();
 }
 
 /*************************** READ FROM SPI **************************/
@@ -742,10 +745,13 @@ void ADXL313::readFromSPI(byte __reg_address, int num, byte _buff[]) {
   	_address = _address | 0x40;
   }
 
+
+  _spiPort->beginTransaction(SPISettings(SPIfreq, MSBFIRST, SPI_MODE3));
   digitalWrite(_CS, LOW);
   _spiPort->transfer(_address);		// Transfer Starting Reg Address To Be Read
   for(int i=0; i<num; i++){
     _buff[i] = _spiPort->transfer(0x00);
   }
   digitalWrite(_CS, HIGH);
+  _spiPort->endTransaction();
 }
